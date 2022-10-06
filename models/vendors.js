@@ -1,5 +1,7 @@
 const sequelize = require("./index");
 const { DataTypes } = require("sequelize");
+const Product = require("./product");
+const Product_Vendor = require("./product_vendor");
 //
 const Vendor = sequelize.define(
   "vendors",
@@ -57,6 +59,9 @@ const Vendor = sequelize.define(
       type: DataTypes.STRING,
     },
     business_address: {
+      type: DataTypes.STRING,
+    },
+    business_phone_number: {
       type: DataTypes.STRING,
     },
     email_address: {
@@ -125,6 +130,13 @@ const Vendor = sequelize.define(
   }
 );
 //
-
+Vendor.belongsToMany(Product, {
+  through: Product_Vendor,
+  onDelete: "CASCADE",
+});
+Product.belongsToMany(Vendor, {
+  through: Product_Vendor,
+  onDelete: "CASCADE",
+});
 //
 module.exports = Vendor;

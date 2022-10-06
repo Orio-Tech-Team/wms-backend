@@ -1,5 +1,7 @@
 const sequelize = require("./index");
 const { DataTypes } = require("sequelize");
+const Product = require("./product");
+const Product_Category = require("./product_category");
 
 const Category = sequelize.define(
   "categories",
@@ -22,6 +24,13 @@ const Category = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    category_status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    category_sorting: {
+      type: DataTypes.STRING,
+    },
     category_image: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -34,6 +43,15 @@ const Category = sequelize.define(
 //
 Category.hasOne(Category, {
   foreignKey: "parent_id",
+  onDelete: "CASCADE",
+});
+//
+Category.belongsToMany(Product, {
+  through: Product_Category,
+  onDelete: "CASCADE",
+});
+Product.belongsToMany(Category, {
+  through: Product_Category,
   onDelete: "CASCADE",
 });
 //

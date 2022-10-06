@@ -2,6 +2,7 @@ const sequelize = require("./index");
 const { DataTypes } = require("sequelize");
 const Vendor = require("./vendors");
 const Vendor_Manufacturer = require("./vendor_manufacturer");
+const Product = require("./product");
 
 const Manufacturer = sequelize.define(
   "manufacturers",
@@ -29,6 +30,10 @@ const Manufacturer = sequelize.define(
     initialAutoIncrement: 1000,
   }
 );
+//
+Manufacturer.hasOne(Product, {
+  onDelete: "CASCADE",
+});
 //
 Manufacturer.belongsToMany(Vendor, {
   through: Vendor_Manufacturer,

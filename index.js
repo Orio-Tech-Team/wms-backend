@@ -19,13 +19,23 @@ const port = process.env.PORT || 3002;
 const manufacturerRoutes = require("./routes/manufacturer");
 const categoryRoutes = require("./routes/category");
 const vendorRoutes = require("./routes/vendor");
+const productRoutes = require("./routes/product");
 //
 app.use("/dashboard/", manufacturerRoutes);
 app.use("/dashboard/", categoryRoutes);
 app.use("/dashboard/", vendorRoutes);
+app.use("/dashboard/", productRoutes);
 //
 app.listen(port, () => {
   console.log("Server started at port 3001");
+  // sequelize.sync({ force: true });
+  // console.log("Database Synced!");
+  //
+  sequelize.sync({ alter: true }).then(() => {
+    console.log("Database Synced!");
+  });
+  //
+  //
   sequelize.authenticate();
   console.log("Database Connected");
 });
