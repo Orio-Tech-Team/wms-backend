@@ -272,7 +272,7 @@ const vendorManufacturer = async (req, res) => {
     const id = req.params.id;
     const manufacturer = await Vendor_Manufacturer.findAll({
       where: {
-        vendor_id: id,
+        vendorId: id,
       },
     });
 
