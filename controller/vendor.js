@@ -1,3 +1,4 @@
+const sequelize = require("../models");
 const Vendor = require("../models/vendors");
 const Vendor_Manufacturer = require("../models/vendor_manufacturer");
 const Vendor_Tax = require("../models/vendor_tax");
@@ -47,7 +48,7 @@ const createVendor = async (req, res) => {
     manufacturer,
   } = req.body;
   try {
-    const vendor_data = Vendor.create({
+    const vendor_data = await Vendor.create({
       vendor_status,
       vendor_name,
       procurement_category,
@@ -129,10 +130,10 @@ const deleteVendor = async (req, res) => {
     });
     const vendor_manufacturer = await Vendor_Manufacturer.destroy({
       where: {
-        vendor_id: id,
+        vendorId: id,
       },
     });
-    return res.json(vendor, vendor_manufacturer);
+    return res.status(200).json("Deleted Successfully");
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -293,6 +294,18 @@ const vendorTax = async (req, res) => {
   }
 };
 //
+const vendorProducts = async (req, res) => {
+  try {
+    const returnValue = await sequelize.query(
+      "Select pv.*,p.product_name,p.quantity,v.vendor_name from product_vendors pv LEFT JOIN products p ON p.id = pv.productId LEFT JOIN vendors v ON v.id = pv.vendorId"
+    );
+    return res.json(returnValue);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
 module.exports = {
   createVendor,
   getVendor,
@@ -301,4 +314,5 @@ module.exports = {
   updateVendor,
   vendorManufacturer,
   vendorTax,
+  vendorProducts,
 };

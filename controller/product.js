@@ -1,3 +1,4 @@
+const sequelize = require("../models/index");
 const Product = require("../models/product");
 const Product_Category = require("../models/product_category");
 const Product_Image = require("../models/product_images");
@@ -45,7 +46,7 @@ const createProduct = async (req, res) => {
   } = req.body;
   //
   try {
-    const product_data = Product.create({
+    const product_data = await Product.create({
       item_status,
       product_name,
       sku_description,
@@ -113,25 +114,32 @@ const createProduct = async (req, res) => {
       });
     const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
 
-    const vendorRaw = vendor.map((vendorId) => {
-      {
+    const vendorKeys = Object.keys(vendor);
+    console.log(vendorKeys);
+    if (vendorKeys.length > 0) {
+      const vendorRaw = vendor.selected.map((vendorId) => {
+        {
+          return {
+            vendorId: vendorId,
+            productId: product_data.id,
+          };
+        }
+      });
+      const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
+    }
+
+    const categoryKeys = Object.keys(category);
+    if (categoryKeys.length > 0) {
+      const categoryRaw = category.selected.map((categoryId) => {
         return {
-          vendorId: vendorId,
+          categoryId: categoryId,
           productId: product_data.id,
         };
-      }
-    });
-    const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
-
-    const categoryRaw = category.map((categoryId) => {
-      return {
-        categoryId: categoryId,
-        productId: product_data.id,
-      };
-    });
-    const productCategoryResponse = await Product_Category.bulkCreate(
-      categoryRaw
-    );
+      });
+      const productCategoryResponse = await Product_Category.bulkCreate(
+        categoryRaw
+      );
+    }
     //
     return res.status(200).json("Created Successfully!");
     //
@@ -143,7 +151,9 @@ const createProduct = async (req, res) => {
 //
 const getProduct = async (req, res) => {
   try {
-    const product_data = await Product.findAll();
+    const [product_data, metaData] = await sequelize.query(
+      "SELECT p.*,m.manufacturer_name FROM products p LEFT JOIN manufacturers m ON p.manufacturerId = m.id"
+    );
     return res.status(200).json(product_data);
   } catch (err) {
     console.log(err);
@@ -169,11 +179,9 @@ const deleteProduct = async (req, res) => {
 const findProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const product_data = await Product.findAll({
-      where: {
-        id,
-      },
-    });
+    const [product_data, metaData] = await sequelize.query(
+      `SELECT p.*,m.manufacturer_name FROM products p LEFT JOIN manufacturers m ON p.manufacturerId = m.id WHERE p.id = ${id}`
+    );
     return res.status(200).json(product_data);
   } catch (err) {
     console.log(err);
@@ -267,22 +275,22 @@ const updateProduct = async (req, res) => {
     //
     const deleteProductImage = await Product_Image.destroy({
       where: {
-        id,
+        productId: id,
       },
     });
     const deleteProductTag = await Product_Tag.destroy({
       where: {
-        id,
+        productId: id,
       },
     });
     const deleteProductVendor = await Product_Vendor.destroy({
       where: {
-        id,
+        productId: id,
       },
     });
     const deleteProductCategory = await Product_Category.destroy({
       where: {
-        id,
+        productId: id,
       },
     });
     //
@@ -292,7 +300,7 @@ const updateProduct = async (req, res) => {
       .map((eachKey) => {
         return productPictures[eachKey] != ""
           ? {
-              productId: product_data.id,
+              productId: id,
               image_url: productPictures[eachKey],
             }
           : "";
@@ -308,7 +316,7 @@ const updateProduct = async (req, res) => {
       .map((eachItem) => {
         if (productTags.length > 0) {
           return {
-            productId: product_data.id,
+            productId: id,
             tag_name: eachItem,
           };
         }
@@ -319,25 +327,32 @@ const updateProduct = async (req, res) => {
       });
     const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
 
-    const vendorRaw = vendor.map((vendorId) => {
-      {
-        return {
-          vendorId: vendorId,
-          productId: product_data.id,
-        };
-      }
-    });
-    const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
+    const vendorKeys = Object.keys(vendor);
+    console.log(vendorKeys);
+    if (vendorKeys.length > 0) {
+      const vendorRaw = vendor.selected.map((vendorId) => {
+        {
+          return {
+            vendorId: vendorId,
+            productId: id,
+          };
+        }
+      });
+      const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
+    }
 
-    const categoryRaw = category.map((categoryId) => {
-      return {
-        categoryId: categoryId,
-        productId: product_data.id,
-      };
-    });
-    const productCategoryResponse = await Product_Category.bulkCreate(
-      categoryRaw
-    );
+    const categoryKeys = Object.keys(category);
+    if (categoryKeys.length > 0) {
+      const categoryRaw = category.selected.map((categoryId) => {
+        return {
+          categoryId: categoryId,
+          productId: id,
+        };
+      });
+      const productCategoryResponse = await Product_Category.bulkCreate(
+        categoryRaw
+      );
+    }
     //
     return res.status(200).json("Updated Successfully!");
     //
@@ -357,6 +372,68 @@ const productVendor = async (req, res) => {
   }
 };
 //
+const productCategory = async (req, res) => {
+  try {
+    const productCategory_data = await Product_Category.findAll();
+    return res.status(200).json(productCategory_data);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
+const getProductCategory = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [product_category, metaData] = await sequelize.query(
+      `SELECT p.id as ProductId,c.categoryId FROM products p LEFT JOIN product_categories c ON p.id = c.productId WHERE p.id = ${id}`
+    );
+    return res.status(200).json(product_category);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
+const getProductVendor = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [product_vendor, metaData] = await sequelize.query(
+      `SELECT p.id as ProductId,v.vendorId FROM products p LEFT JOIN product_vendors v ON p.id = v.productId WHERE p.id = ${id}`
+    );
+    return res.status(200).json(product_vendor);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
+const getProductTags = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [product_tags, metaData] = await sequelize.query(
+      `SELECT p.id as ProductId,pt.tag_name FROM products p LEFT JOIN product_tags pt ON p.id = pt.productId WHERE p.id = ${id}`
+    );
+    return res.status(200).json(product_tags);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
+const getProductImages = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [product_tags, metaData] = await sequelize.query(
+      `SELECT p.id as ProductId,pi.image_url FROM products p LEFT JOIN product_images pi ON p.id = pi.productId WHERE p.id = ${id}`
+    );
+    return res.status(200).json(product_tags);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
 module.exports = {
   createProduct,
   getProduct,
@@ -364,4 +441,9 @@ module.exports = {
   findProduct,
   updateProduct,
   productVendor,
+  getProductCategory,
+  getProductVendor,
+  productCategory,
+  getProductTags,
+  getProductImages,
 };

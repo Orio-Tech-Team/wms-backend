@@ -6,6 +6,7 @@ const {
   updateVendor,
   vendorManufacturer,
   vendorTax,
+  vendorProducts,
 } = require("../controller/vendor");
 //
 const express = require("express"),
@@ -18,5 +19,6 @@ router.get("/vendor/update/:id", findVendor);
 router.put("/vendor/update/", updateVendor);
 router.get("/vendor/vendor_manufacturer/:id", vendorManufacturer);
 router.get("/vendor/add_vendor/vendor_tax/", vendorTax);
+router.get("/vendor/product_vendor/", vendorProducts);
 //
 module.exports = router;
