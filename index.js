@@ -20,13 +20,13 @@ const manufacturerRoutes = require("./routes/manufacturer");
 const categoryRoutes = require("./routes/category");
 const vendorRoutes = require("./routes/vendor");
 const productRoutes = require("./routes/product");
-const productOrderRoutes = require("./routes/productOrder");
+const orderRoutes = require("./routes/po_master");
 //
 app.use("/dashboard/", manufacturerRoutes);
 app.use("/dashboard/", categoryRoutes);
 app.use("/dashboard/", vendorRoutes);
 app.use("/dashboard/", productRoutes);
-app.use("/dashboard/", productOrderRoutes);
+app.use("/dashboard/", orderRoutes);
 //
 app.listen(port, () => {
   console.log("Server started at port 3001");

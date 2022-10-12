@@ -1,8 +1,8 @@
 const sequelize = require("./index");
 const { DataTypes } = require("sequelize");
 //
-const ProductOrder = sequelize.define(
-  "product_order",
+const PO_Detail = sequelize.define(
+  "po_detail",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,14 +10,18 @@ const ProductOrder = sequelize.define(
       autoIncrement: true,
       unique: true,
     },
-    vendor_id: {
-      type: DataTypes.INTEGER,
-    },
     product_id: {
       type: DataTypes.INTEGER,
     },
-    quantity: {
+    product_name: {
+      type: DataTypes.STRING,
+    },
+    ordered_quantity: {
       type: DataTypes.INTEGER,
+    },
+    received_quantity: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
   },
   {
@@ -25,4 +29,4 @@ const ProductOrder = sequelize.define(
   }
 );
 //
-module.exports = ProductOrder;
+module.exports = PO_Detail;
