@@ -14,6 +14,9 @@ const PO_Master = sequelize.define(
     vendor_id: {
       type: DataTypes.INTEGER,
     },
+    vendor_name: {
+      type: DataTypes.STRING,
+    },
 
     expected_date: {
       type: DataTypes.DATE,
@@ -21,6 +24,10 @@ const PO_Master = sequelize.define(
     arrival_date: {
       type: DataTypes.DATE,
       defaultValue: null,
+    },
+    order_status: {
+      type: DataTypes.ENUM("In-Progress", "Received"),
+      defaultValue: "In-Progress",
     },
   },
   {

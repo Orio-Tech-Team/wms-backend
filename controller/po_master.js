@@ -1,5 +1,6 @@
 const PO_Detail = require("../models/po_details");
 const PO_Master = require("../models/po_master");
+const sequelize = require("../models/index");
 //
 const createOrder = async (req, res) => {
   // const { vendor_id, product_id, expected_date, ordered_quantity } = req.body;
@@ -39,4 +40,17 @@ const getOrder = async (req, res) => {
   }
 };
 //
-module.exports = { createOrder, getOrder };
+const getDetails = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const order_response = await PO_Detail.findAll({
+      where: { po_id: id },
+    });
+    return res.status(200).json(order_response);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
+module.exports = { createOrder, getOrder, getDetails };
