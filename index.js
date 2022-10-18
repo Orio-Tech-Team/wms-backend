@@ -16,6 +16,8 @@ app.use(
     limit: "10mb",
   })
 );
+app.use(express.static("assets"));
+app.use("/product_images", express.static("images"));
 //
 const port = process.env.PORT || 3002;
 //

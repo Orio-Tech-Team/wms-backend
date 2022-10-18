@@ -47,118 +47,124 @@ const createProduct = async (req, res) => {
   } = req.body;
   //
   try {
-    // const product_data = await Product.create({
-    //   item_status,
-    //   product_name,
-    //   sku_description,
-    //   sku_department,
-    //   item_nature,
-    //   tax_code,
-    //   purchasing_unit,
-    //   selling_unit,
-    //   trade_price,
-    //   discounted_price,
-    //   maximum_retail_price,
-    //   sku_minimum_level,
-    //   sku_maximum_level,
-    //   sku_reorder_level,
-    //   sku_warehouse_lead_time,
-    //   item_release_level,
-    //   price_levels,
-    //   stock_nature,
-    //   bar_code,
-    //   item_storage_location,
-    //   item_conversion,
-    //   selling_discount,
-    //   item_tracking_level,
-    //   product_lifecycle,
-    //   manufacturerId: manufacturer_id,
-    //   quantity,
-    //   prescription_required,
-    //   drap_id,
-    //   dosage_instruction,
-    //   side_effects,
-    //   margin,
-    // });
+    const product_data = await Product.create({
+      item_status,
+      product_name,
+      sku_description,
+      sku_department,
+      item_nature,
+      tax_code,
+      purchasing_unit,
+      selling_unit,
+      trade_price,
+      discounted_price,
+      maximum_retail_price,
+      sku_minimum_level,
+      sku_maximum_level,
+      sku_reorder_level,
+      sku_warehouse_lead_time,
+      item_release_level,
+      price_levels,
+      stock_nature,
+      bar_code,
+      item_storage_location,
+      item_conversion,
+      selling_discount,
+      item_tracking_level,
+      product_lifecycle,
+      manufacturerId: manufacturer_id,
+      quantity,
+      prescription_required,
+      drap_id,
+      dosage_instruction,
+      side_effects,
+      margin,
+    });
     //
     //
-    console.log(productPictures);
-    // const productPictureKeys = Object.keys(productPictures);
-    // const productPicturesRaw = productPictureKeys
-    //   .map((eachKey) => {
-    //     return productPictures[eachKey] != ""
-    //       ? {
-    //           productId: product_data.id,
-    //           image_url: productPictures[eachKey],
-    //         }
-    //       : "";
-    //   })
-    //   .filter((eachValue) => {
-    //     return eachValue != "";
-    //   });
-    // const productPictureResponse = await Product_Image.bulkCreate(
-    //   productPicturesRaw
-    // );
+    var base64Data = productPictures.map((item) =>
+      item.image_url.replace(/^data:image\/png;base64,/, "")
+    );
+    const product_url = base64Data.map((item, key) => {
+      require("fs").writeFile(
+        `./assets/product_images/${product_data.id + "_" + key}.png`,
+        item,
+        "base64",
+        function (err) {
+          console.log(err);
+        }
+      );
+      return `/product_images/${product_data.id + "_" + key}`;
+    });
+    const productPicturesRaw = product_url.map((eachUrl) => {
+      return {
+        productId: product_data.id,
+        image_url: eachUrl,
+      };
+    });
+    const productPictureResponse = await Product_Image.bulkCreate(
+      productPicturesRaw
+    );
 
-    // const productTagsRaw = productTags
-    //   .map((eachItem) => {
-    //     if (productTags.length > 0) {
-    //       return {
-    //         productId: product_data.id,
-    //         tag_name: eachItem,
-    //       };
-    //     }
-    //     return "";
-    //   })
-    //   .filter((eachValue) => {
-    //     return eachValue != "";
-    //   });
-    // const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
-    // //
-    // const productFormulaRaw = productGenericFormula
-    //   .map((eachItem) => {
-    //     if (productGenericFormula.length > 0) {
-    //       return {
-    //         productId: product_data.id,
-    //         product_generic_formula: eachItem,
-    //       };
-    //     }
-    //     return "";
-    //   })
-    //   .filter((eachValue) => {
-    //     return eachValue != "";
-    //   });
-    // const productFormulaResponse = await Product_GenericFormula.bulkCreate(
-    //   productFormulaRaw
-    // );
-    // //
+    const productTagsRaw = productTags
+      .map((eachItem) => {
+        if (productTags.length > 0) {
+          return {
+            productId: product_data.id,
+            tag_name: eachItem,
+          };
+        }
+        return "";
+      })
+      .filter((eachValue) => {
+        return eachValue != "";
+      });
+    const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+    //
+    const productFormulaRaw = productGenericFormula
+      .map((eachItem) => {
+        if (productGenericFormula.length > 0) {
+          return {
+            productId: product_data.id,
+            product_generic_formula: eachItem,
+          };
+        }
+        return "";
+      })
+      .filter((eachValue) => {
+        return eachValue != "";
+      });
+    const productFormulaResponse = await Product_GenericFormula.bulkCreate(
+      productFormulaRaw
+    );
+    //
 
-    // const vendorKeys = Object.keys(vendor);
-    // console.log(vendorKeys);
-    // if (vendorKeys.length > 0) {
-    //   const vendorRaw = vendor.selected.map((vendorId) => {
-    //     {
-    //       return {
-    //         vendorId: vendorId,
-    //         productId: product_data.id,
-    //       };
-    //     }
-    //   });
-    //   const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
-    // }
+    const vendorKeys = Object.keys(vendor);
+    console.log(vendorKeys);
+    if (vendorKeys.length > 0) {
+      const vendorRaw = vendor.selected.map((vendorId) => {
+        {
+          return {
+            vendorId: vendorId,
+            productId: product_data.id,
+          };
+        }
+      });
+      const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
+    }
 
-    // const categoryKeys = Object.keys(category);
-    // if (categoryKeys.length > 0) {
-    //   const categoryRaw = category.selected.map((categoryId) => {
-    //     return {
-    //       categoryId: categoryId,
-    //       productId: product_data.id,
-    //     };
-    //   });
-    //   const productCategoryResponse = await Product_Category.bulkCreate(
-    //     categoryRaw
-    //   );
-    // }
+    const categoryKeys = Object.keys(category);
+    if (categoryKeys.length > 0) {
+      const categoryRaw = category.selected.map((categoryId) => {
+        return {
+          categoryId: categoryId,
+          productId: product_data.id,
+        };
+      });
+      const productCategoryResponse = await Product_Category.bulkCreate(
+        categoryRaw
+      );
+    }
     //
     return res.status(200).json("Created Successfully!");
     //
@@ -182,6 +188,26 @@ const getProduct = async (req, res) => {
 //
 const deleteProduct = async (req, res) => {
   const id = req.params.id;
+  //
+  for (let i = 0; i < 3; i++) {
+    require("fs").stat(
+      `./assets/product_images/${id + "_" + i}.png`,
+      function (err, stats) {
+        if (err) {
+          return console.error(err);
+        }
+
+        require("fs").unlink(
+          `./assets/product_images/${id + "_" + i}.png`,
+          function (err) {
+            if (err) return console.log(err);
+            console.log("file deleted successfully");
+          }
+        );
+      }
+    );
+  }
+  //
   try {
     const product_data = await Product.destroy({
       where: {
@@ -291,11 +317,30 @@ const updateProduct = async (req, res) => {
       }
     );
     //
+    for (let i = 0; i < 3; i++) {
+      require("fs").stat(
+        `./assets/product_images/${id + "_" + i}.png`,
+        function (err, stats) {
+          if (err) {
+            return console.error(err);
+          }
+
+          require("fs").unlink(
+            `./assets/product_images/${id + "_" + i}.png`,
+            function (err) {
+              if (err) return console.log(err);
+              console.log("file deleted successfully");
+            }
+          );
+        }
+      );
+    }
     const deleteProductImage = await Product_Image.destroy({
       where: {
         productId: id,
       },
     });
+
     const deleteProductTag = await Product_Tag.destroy({
       where: {
         productId: id,
@@ -318,19 +363,26 @@ const updateProduct = async (req, res) => {
     });
     //
     //
-    const productPictureKeys = Object.keys(productPictures);
-    const productPicturesRaw = productPictureKeys
-      .map((eachKey) => {
-        return productPictures[eachKey] != ""
-          ? {
-              productId: id,
-              image_url: productPictures[eachKey],
-            }
-          : "";
-      })
-      .filter((eachValue) => {
-        return eachValue != "";
-      });
+    var base64Data = productPictures.map((item) =>
+      item.image_url.replace(/^data:image\/png;base64,/, "")
+    );
+    const product_url = base64Data.map((item, key) => {
+      require("fs").writeFile(
+        `./assets/product_images/${product_data.id + "_" + key}.png`,
+        item,
+        "base64",
+        function (err) {
+          console.log(err);
+        }
+      );
+      return `/product_images/${product_data.id + "_" + key}`;
+    });
+    const productPicturesRaw = product_url.map((eachUrl) => {
+      return {
+        productId: id,
+        image_url: eachUrl,
+      };
+    });
     const productPictureResponse = await Product_Image.bulkCreate(
       productPicturesRaw
     );
