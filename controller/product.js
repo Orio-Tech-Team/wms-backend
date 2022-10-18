@@ -1,6 +1,7 @@
 const sequelize = require("../models/index");
 const Product = require("../models/product");
 const Product_Category = require("../models/product_category");
+const Product_GenericFormula = require("../models/product_genericFormula");
 const Product_Image = require("../models/product_images");
 const Product_Tag = require("../models/product_tags");
 const Product_Vendor = require("../models/product_vendor");
@@ -32,7 +33,7 @@ const createProduct = async (req, res) => {
     item_tracking_level,
     product_lifecycle,
     manufacturer_id,
-    product_generic_formula,
+    productGenericFormula,
     quantity,
     prescription_required,
     drap_id,
@@ -46,100 +47,118 @@ const createProduct = async (req, res) => {
   } = req.body;
   //
   try {
-    const product_data = await Product.create({
-      item_status,
-      product_name,
-      sku_description,
-      sku_department,
-      item_nature,
-      tax_code,
-      purchasing_unit,
-      selling_unit,
-      trade_price,
-      discounted_price,
-      maximum_retail_price,
-      sku_minimum_level,
-      sku_maximum_level,
-      sku_reorder_level,
-      sku_warehouse_lead_time,
-      item_release_level,
-      price_levels,
-      stock_nature,
-      bar_code,
-      item_storage_location,
-      item_conversion,
-      selling_discount,
-      item_tracking_level,
-      product_lifecycle,
-      manufacturerId: manufacturer_id,
-      product_generic_formula,
-      quantity,
-      prescription_required,
-      drap_id,
-      dosage_instruction,
-      side_effects,
-      margin,
-    });
+    // const product_data = await Product.create({
+    //   item_status,
+    //   product_name,
+    //   sku_description,
+    //   sku_department,
+    //   item_nature,
+    //   tax_code,
+    //   purchasing_unit,
+    //   selling_unit,
+    //   trade_price,
+    //   discounted_price,
+    //   maximum_retail_price,
+    //   sku_minimum_level,
+    //   sku_maximum_level,
+    //   sku_reorder_level,
+    //   sku_warehouse_lead_time,
+    //   item_release_level,
+    //   price_levels,
+    //   stock_nature,
+    //   bar_code,
+    //   item_storage_location,
+    //   item_conversion,
+    //   selling_discount,
+    //   item_tracking_level,
+    //   product_lifecycle,
+    //   manufacturerId: manufacturer_id,
+    //   quantity,
+    //   prescription_required,
+    //   drap_id,
+    //   dosage_instruction,
+    //   side_effects,
+    //   margin,
+    // });
     //
     //
-    const productPictureKeys = Object.keys(productPictures);
-    const productPicturesRaw = productPictureKeys
-      .map((eachKey) => {
-        return productPictures[eachKey] != ""
-          ? {
-              productId: product_data.id,
-              image_url: productPictures[eachKey],
-            }
-          : "";
-      })
-      .filter((eachValue) => {
-        return eachValue != "";
-      });
-    const productPictureResponse = await Product_Image.bulkCreate(
-      productPicturesRaw
-    );
+    console.log(productPictures);
+    // const productPictureKeys = Object.keys(productPictures);
+    // const productPicturesRaw = productPictureKeys
+    //   .map((eachKey) => {
+    //     return productPictures[eachKey] != ""
+    //       ? {
+    //           productId: product_data.id,
+    //           image_url: productPictures[eachKey],
+    //         }
+    //       : "";
+    //   })
+    //   .filter((eachValue) => {
+    //     return eachValue != "";
+    //   });
+    // const productPictureResponse = await Product_Image.bulkCreate(
+    //   productPicturesRaw
+    // );
 
-    const productTagsRaw = productTags
-      .map((eachItem) => {
-        if (productTags.length > 0) {
-          return {
-            productId: product_data.id,
-            tag_name: eachItem,
-          };
-        }
-        return "";
-      })
-      .filter((eachValue) => {
-        return eachValue != "";
-      });
-    const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+    // const productTagsRaw = productTags
+    //   .map((eachItem) => {
+    //     if (productTags.length > 0) {
+    //       return {
+    //         productId: product_data.id,
+    //         tag_name: eachItem,
+    //       };
+    //     }
+    //     return "";
+    //   })
+    //   .filter((eachValue) => {
+    //     return eachValue != "";
+    //   });
+    // const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+    // //
+    // const productFormulaRaw = productGenericFormula
+    //   .map((eachItem) => {
+    //     if (productGenericFormula.length > 0) {
+    //       return {
+    //         productId: product_data.id,
+    //         product_generic_formula: eachItem,
+    //       };
+    //     }
+    //     return "";
+    //   })
+    //   .filter((eachValue) => {
+    //     return eachValue != "";
+    //   });
+    // const productFormulaResponse = await Product_GenericFormula.bulkCreate(
+    //   productFormulaRaw
+    // );
+    // //
 
-    const vendorKeys = Object.keys(vendor);
-    console.log(vendorKeys);
-    if (vendorKeys.length > 0) {
-      const vendorRaw = vendor.selected.map((vendorId) => {
-        {
-          return {
-            vendorId: vendorId,
-            productId: product_data.id,
-          };
-        }
-      });
-      const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
-    }
+    // const vendorKeys = Object.keys(vendor);
+    // console.log(vendorKeys);
+    // if (vendorKeys.length > 0) {
+    //   const vendorRaw = vendor.selected.map((vendorId) => {
+    //     {
+    //       return {
+    //         vendorId: vendorId,
+    //         productId: product_data.id,
+    //       };
+    //     }
+    //   });
+    //   const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
+    // }
 
-    const categoryKeys = Object.keys(category);
-    if (categoryKeys.length > 0) {
-      const categoryRaw = category.selected.map((categoryId) => {
-        return {
-          categoryId: categoryId,
-          productId: product_data.id,
-        };
-      });
-      const productCategoryResponse = await Product_Category.bulkCreate(
-        categoryRaw
-      );
-    }
+    // const categoryKeys = Object.keys(category);
+    // if (categoryKeys.length > 0) {
+    //   const categoryRaw = category.selected.map((categoryId) => {
+    //     return {
+    //       categoryId: categoryId,
+    //       productId: product_data.id,
+    //     };
+    //   });
+    //   const productCategoryResponse = await Product_Category.bulkCreate(
+    //     categoryRaw
+    //   );
+    // }
     //
     return res.status(200).json("Created Successfully!");
     //
@@ -217,9 +236,9 @@ const updateProduct = async (req, res) => {
     item_tracking_level,
     product_lifecycle,
     manufacturer_id,
-    product_generic_formula,
     quantity,
     prescription_required,
+    productGenericFormula,
     drap_id,
     dosage_instruction,
     side_effects,
@@ -258,7 +277,6 @@ const updateProduct = async (req, res) => {
         item_tracking_level,
         product_lifecycle,
         manufacturerId: manufacturer_id,
-        product_generic_formula,
         quantity,
         prescription_required,
         drap_id,
@@ -293,6 +311,11 @@ const updateProduct = async (req, res) => {
         productId: id,
       },
     });
+    const deleteProductFormula = await Product_GenericFormula.destroy({
+      where: {
+        productId: id,
+      },
+    });
     //
     //
     const productPictureKeys = Object.keys(productPictures);
@@ -311,7 +334,7 @@ const updateProduct = async (req, res) => {
     const productPictureResponse = await Product_Image.bulkCreate(
       productPicturesRaw
     );
-
+    //
     const productTagsRaw = productTags
       .map((eachItem) => {
         if (productTags.length > 0) {
@@ -326,6 +349,22 @@ const updateProduct = async (req, res) => {
         return eachValue != "";
       });
     const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+    //
+    const productGenericFormulaRaw = productGenericFormula
+      .map((eachItem) => {
+        if (productGenericFormula.length > 0) {
+          return {
+            productId: id,
+            product_generic_formula: eachItem,
+          };
+        }
+        return "";
+      })
+      .filter((eachValue) => {
+        return eachValue != "";
+      });
+    const productGenericFormulaResponse =
+      await Product_GenericFormula.bulkCreate(productGenericFormulaRaw);
 
     const vendorKeys = Object.keys(vendor);
     console.log(vendorKeys);
@@ -434,6 +473,18 @@ const getProductImages = async (req, res) => {
   }
 };
 //
+const getProductFormula = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [productFormula, metaData] = await sequelize.query(
+      `SELECT p.id as ProductId,pf.product_generic_formula FROM products p LEFT JOIN product_genericFormulas pf ON p.id = pf.productId WHERE p.id = ${id}`
+    );
+    return res.status(200).json(productFormula);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
 module.exports = {
   createProduct,
   getProduct,
@@ -446,4 +497,5 @@ module.exports = {
   productCategory,
   getProductTags,
   getProductImages,
+  getProductFormula,
 };

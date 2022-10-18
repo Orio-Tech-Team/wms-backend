@@ -53,4 +53,34 @@ const getDetails = async (req, res) => {
   }
 };
 //
-module.exports = { createOrder, getOrder, getDetails };
+const orderReceived = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const order_response = await PO_Master.update(
+      {
+        order_status: "Received",
+        arrival_date: new Date(),
+      },
+      {
+        where: { id },
+      }
+    );
+    return res.status(200).json(order_response);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
+const productDetailUpdate = async (req, res) => {
+  console.log("hello");
+};
+//
+module.exports = {
+  createOrder,
+  getOrder,
+  getDetails,
+  orderReceived,
+  productDetailUpdate,
+};

@@ -23,6 +23,15 @@ const PO_Detail = sequelize.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    maximum_retail_price: {
+      type: DataTypes.INTEGER,
+    },
+    discounted_price: {
+      type: DataTypes.INTEGER,
+    },
+    purchasing_price: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     initialAutoIncrement: 1000,

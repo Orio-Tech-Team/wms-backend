@@ -90,9 +90,6 @@ const Product = sequelize.define(
     quantity: {
       type: DataTypes.STRING,
     },
-    product_generic_formula: {
-      type: DataTypes.STRING,
-    },
     prescription_required: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
