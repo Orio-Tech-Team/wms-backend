@@ -94,7 +94,7 @@ const createProduct = async (req, res) => {
           console.log(err);
         }
       );
-      return `/product_images/${product_data.id + "_" + key}`;
+      return `/product_images/${product_data.id + "_" + key}.png`;
     });
     const productPicturesRaw = product_url.map((eachUrl) => {
       return {
@@ -375,7 +375,7 @@ const updateProduct = async (req, res) => {
           console.log(err);
         }
       );
-      return `/product_images/${product_data.id + "_" + key}`;
+      return `/product_images/${product_data.id + "_" + key}.png`;
     });
     const productPicturesRaw = product_url.map((eachUrl) => {
       return {
