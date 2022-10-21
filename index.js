@@ -35,7 +35,6 @@ app.use("/dashboard/", productRoutes);
 app.use("/dashboard/", orderRoutes);
 //
 app.listen(port, () => {
-  console.log("Server started at port 3001");
   // sequelize.sync({ force: true }).then(() => {
   //   console.log("Database Synced!");
   // });
@@ -47,4 +46,6 @@ app.listen(port, () => {
   //
   sequelize.authenticate();
   console.log("Database Connected");
+  //
+  console.log("Server started at port 3001");
 });

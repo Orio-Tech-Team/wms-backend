@@ -53,6 +53,33 @@ const getDetails = async (req, res) => {
   }
 };
 //
+const updateDetails = async (req, res) => {
+  try {
+    req.body.forEach(async (element) => {
+      let order_response = await PO_Detail.update(
+        {
+          received_quantity: element.received_quantity,
+          maximum_retail_price: element.maximum_retail_price,
+          purchasing_price: element.purchasing_price,
+          discounted_price: element.discounted_price,
+          batch_no: element.batch_no,
+          batch_expiry: element.batch_expiry,
+          comments: element.comments,
+        },
+        {
+          where: {
+            id: element.id,
+          },
+        }
+      );
+    });
+    return res.status(200).json("Successfully Updated!");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
 const orderReceived = async (req, res) => {
   const id = req.params.id;
 
@@ -81,6 +108,7 @@ module.exports = {
   createOrder,
   getOrder,
   getDetails,
+  updateDetails,
   orderReceived,
   productDetailUpdate,
 };

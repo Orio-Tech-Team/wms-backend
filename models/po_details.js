@@ -24,13 +24,26 @@ const PO_Detail = sequelize.define(
       defaultValue: 0,
     },
     maximum_retail_price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     discounted_price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
     purchasing_price: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
+    },
+    batch_no: {
       type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    batch_expiry: {
+      type: DataTypes.STRING,
+    },
+    comments: {
+      type: DataTypes.STRING,
     },
   },
   {
