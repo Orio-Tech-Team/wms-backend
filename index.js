@@ -39,9 +39,9 @@ app.listen(port, () => {
   //   console.log("Database Synced!");
   // });
   //
-  // sequelize.sync({ alter: true }).then(() => {
-  //   console.log("Database Synced!");
-  // });
+  sequelize.sync({ alter: true }).then(() => {
+    console.log("Database Synced!");
+  });
   //
   //
   sequelize.authenticate();

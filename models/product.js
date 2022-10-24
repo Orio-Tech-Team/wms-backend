@@ -33,9 +33,6 @@ const Product = sequelize.define(
     purchasing_unit: {
       type: DataTypes.STRING,
     },
-    selling_unit: {
-      type: DataTypes.STRING,
-    },
     trade_price: {
       type: DataTypes.STRING,
     },
@@ -73,9 +70,6 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
     },
     item_storage_location: {
-      type: DataTypes.STRING,
-    },
-    item_conversion: {
       type: DataTypes.STRING,
     },
     selling_discount: {

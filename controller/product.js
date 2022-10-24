@@ -1,10 +1,12 @@
 const sequelize = require("../models/index");
 const Product = require("../models/product");
 const Product_Category = require("../models/product_category");
+const Product_Conversion = require("../models/product_convertsion");
 const Product_GenericFormula = require("../models/product_genericFormula");
 const Product_Image = require("../models/product_images");
 const Product_Tag = require("../models/product_tags");
 const Product_Vendor = require("../models/product_vendor");
+const { default: Tag } = require("../models/tags");
 //
 const createProduct = async (req, res) => {
   const {
@@ -15,7 +17,6 @@ const createProduct = async (req, res) => {
     item_nature,
     tax_code,
     purchasing_unit,
-    selling_unit,
     trade_price,
     discounted_price,
     maximum_retail_price,
@@ -28,7 +29,6 @@ const createProduct = async (req, res) => {
     stock_nature,
     bar_code,
     item_storage_location,
-    item_conversion,
     selling_discount,
     item_tracking_level,
     product_lifecycle,
@@ -44,6 +44,7 @@ const createProduct = async (req, res) => {
     category,
     productPictures,
     productTags,
+    productConversion,
   } = req.body;
   //
   try {
@@ -55,7 +56,6 @@ const createProduct = async (req, res) => {
       item_nature,
       tax_code,
       purchasing_unit,
-      selling_unit,
       trade_price,
       discounted_price,
       maximum_retail_price,
@@ -68,7 +68,6 @@ const createProduct = async (req, res) => {
       stock_nature,
       bar_code,
       item_storage_location,
-      item_conversion,
       selling_discount,
       item_tracking_level,
       product_lifecycle,
@@ -81,6 +80,31 @@ const createProduct = async (req, res) => {
       margin,
     });
     //
+    productConversion.forEach(async (item, key) => {
+      let type = "";
+      switch (key) {
+        case 0:
+          type = "C";
+          break;
+        case 1:
+          type = "B";
+          break;
+        case 2:
+          type = "P";
+          break;
+        case 3:
+          type = "T";
+          break;
+        default:
+          break;
+      }
+      await Product_Conversion.create({
+        type: type,
+        selling_unit: item.selling_unit,
+        item_conversion: item.item_conversion,
+        productId: product_data.id,
+      });
+    });
     //
     var base64Data = productPictures.map((item) =>
       item.image_url.replace(/^data:image\/png;base64,/, "")
@@ -107,8 +131,9 @@ const createProduct = async (req, res) => {
     );
 
     const productTagsRaw = productTags
-      .map((eachItem) => {
+      .map(async (eachItem) => {
         if (productTags.length > 0) {
+          await Tag.create({ tag: eachItem });
           return {
             productId: product_data.id,
             tag_name: eachItem,
@@ -244,7 +269,6 @@ const updateProduct = async (req, res) => {
     item_nature,
     tax_code,
     purchasing_unit,
-    selling_unit,
     trade_price,
     discounted_price,
     maximum_retail_price,
@@ -257,7 +281,6 @@ const updateProduct = async (req, res) => {
     stock_nature,
     bar_code,
     item_storage_location,
-    item_conversion,
     selling_discount,
     item_tracking_level,
     product_lifecycle,
@@ -273,6 +296,7 @@ const updateProduct = async (req, res) => {
     category,
     productPictures,
     productTags,
+    productConversion,
   } = req.body;
   //
   try {
@@ -285,7 +309,6 @@ const updateProduct = async (req, res) => {
         item_nature,
         tax_code,
         purchasing_unit,
-        selling_unit,
         trade_price,
         discounted_price,
         maximum_retail_price,
@@ -298,7 +321,6 @@ const updateProduct = async (req, res) => {
         stock_nature,
         bar_code,
         item_storage_location,
-        item_conversion,
         selling_discount,
         item_tracking_level,
         product_lifecycle,
@@ -316,6 +338,37 @@ const updateProduct = async (req, res) => {
         },
       }
     );
+    //
+    await productConversion.destroy({
+      where: {
+        productId: id,
+      },
+    });
+    productConversion.forEach(async (item, key) => {
+      let type = "";
+      switch (key) {
+        case 0:
+          type = "C";
+          break;
+        case 1:
+          type = "B";
+          break;
+        case 2:
+          type = "P";
+          break;
+        case 3:
+          type = "T";
+          break;
+        default:
+          break;
+      }
+      await Product_Conversion.create({
+        type: type,
+        selling_unit: item.selling_unit,
+        item_conversion: item.item_conversion,
+        productId: product_data.id,
+      });
+    });
     //
     for (let i = 0; i < 3; i++) {
       require("fs").stat(
