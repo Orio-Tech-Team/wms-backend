@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./models/index");
 //
+const errorHandler = require("./middlewares/error.middleware.js");
 // configs
 dotenv.config();
 //
@@ -27,21 +28,25 @@ const categoryRoutes = require("./routes/category");
 const vendorRoutes = require("./routes/vendor");
 const productRoutes = require("./routes/product");
 const orderRoutes = require("./routes/po_master");
+const authRoutes = require("./routes/auth");
 //
 app.use("/dashboard/", manufacturerRoutes);
 app.use("/dashboard/", categoryRoutes);
 app.use("/dashboard/", vendorRoutes);
 app.use("/dashboard/", productRoutes);
 app.use("/dashboard/", orderRoutes);
+app.use("/dashboard/", authRoutes);
+
+app.use(errorHandler);
 //
 app.listen(port, () => {
   // sequelize.sync({ force: true }).then(() => {
   //   console.log("Database Synced!");
   // });
   //
-  sequelize.sync({ alter: true }).then(() => {
-    console.log("Database Synced!");
-  });
+  // sequelize.sync({ alter: true }).then(() => {
+  //   console.log("Database Synced!");
+  // });
   //
   //
   sequelize.authenticate();

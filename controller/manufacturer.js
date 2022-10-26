@@ -1,4 +1,5 @@
 const Manufacturer = require("../models/manufacturer");
+const asyncHandler = require("express-async-handler");
 //
 const createManufacturer = async (req, res) => {
   const { manufacturer_name, line_of_business, manufacturer_status } = req.body;
@@ -15,7 +16,7 @@ const createManufacturer = async (req, res) => {
   }
 };
 //
-const getManufacturer = async (req, res) => {
+const getManufacturer = asyncHandler(async (req, res) => {
   try {
     const manufacturer = await Manufacturer.findAll();
     return res.json(manufacturer);
@@ -23,7 +24,7 @@ const getManufacturer = async (req, res) => {
     console.log(err);
     return res.status(500).json(err);
   }
-};
+});
 //
 const getManufacturerByID = async (req, res) => {
   try {

@@ -6,7 +6,7 @@ const Product_GenericFormula = require("../models/product_genericFormula");
 const Product_Image = require("../models/product_images");
 const Product_Tag = require("../models/product_tags");
 const Product_Vendor = require("../models/product_vendor");
-const { default: Tag } = require("../models/tags");
+const Tag = require("../models/tags");
 //
 const createProduct = async (req, res) => {
   const {
@@ -133,7 +133,9 @@ const createProduct = async (req, res) => {
     const productTagsRaw = productTags
       .map(async (eachItem) => {
         if (productTags.length > 0) {
-          await Tag.create({ tag: eachItem });
+          const tagsData = await Tag.findOrCreate({
+            where: { tag: eachItem },
+          });
           return {
             productId: product_data.id,
             tag_name: eachItem,
