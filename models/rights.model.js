@@ -13,11 +13,11 @@ const Rights = sequelize.define("rights", {
   },
   //
   user_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     references: {
       model: User,
-      key: "id",
+      key: "user_id",
     },
   },
   //

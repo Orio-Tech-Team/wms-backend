@@ -15,20 +15,24 @@ const Menu = sequelize.define("menu", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  urlPath: {
+  url_path: {
     type: DataTypes.STRING,
   },
   status: {
-    type: DataTypes.ENUM("A", "I"),
+    type: DataTypes.ENUM("Active", "In-Active"),
+    defaultValue: "Active",
   },
-  masterId: {
+  strict: {
+    type: DataTypes.ENUM("Active", "In-Active"),
+    defaultValue: "Active",
+  },
+  sorting: {
     type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: Menu,
-      key: "id",
-    },
   },
 });
 //
+Menu.hasOne(Menu, {
+  foreignKey: "masterId",
+  onDelete: "CASCADE",
+});
 module.exports = Menu;

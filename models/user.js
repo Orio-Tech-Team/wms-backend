@@ -39,6 +39,11 @@ const User = sequelize.define("users", {
     type: DataTypes.STRING,
   },
   //
+  phone_number: {
+    type: DataTypes.STRING,
+    unique: true,
+  },
+  //
   user_status: {
     type: DataTypes.ENUM("A", "I"),
     defaultValue: "A",

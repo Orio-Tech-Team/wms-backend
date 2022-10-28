@@ -50,6 +50,7 @@ const login = asyncHandler(async (req, res) => {
       user_status: user.user_status,
       user_name: user.user_name,
       loc_code: user.loc_code,
+      account_number: user.account_number,
       status: "success",
     });
   } else {
@@ -62,8 +63,25 @@ const login = asyncHandler(async (req, res) => {
 // @route   POST /api/register
 // @access  Public
 const register = asyncHandler(async (req, res) => {
-  const { user_id, password, email, loc_code, account_number, type } = req.body;
-  if ((!user_id, !password, !email, !loc_code, !account_number)) {
+  const {
+    user_id,
+    password,
+    email,
+    user_name,
+    phone_number,
+    loc_code,
+    account_number,
+    type,
+  } = req.body;
+  if (
+    (!user_id,
+    !password,
+    !email,
+    !user_name,
+    !phone_number,
+    !loc_code,
+    !account_number)
+  ) {
     res.status(400);
     throw new Error("Please add all fields");
   }
@@ -79,6 +97,29 @@ const register = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("User already exists");
   }
+  //Check if email exists
+  const emailExist = await User.findOne({
+    where: {
+      email,
+    },
+  });
+
+  if (emailExist) {
+    res.status(400);
+    throw new Error("Email already exists");
+  }
+  // Check if phone number exist
+  const phoneExist = await User.findOne({
+    where: {
+      phone_number,
+    },
+  });
+
+  if (phoneExist) {
+    res.status(400);
+    throw new Error("Phone Number already exists");
+  }
+  //
 
   // Hash password
   const salt = await bcrypt.genSalt(10);
@@ -89,6 +130,8 @@ const register = asyncHandler(async (req, res) => {
     user_id,
     password: hashedPassword,
     email,
+    user_name,
+    phone_number,
     loc_code,
     type,
     account_number,

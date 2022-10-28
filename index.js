@@ -29,6 +29,8 @@ const vendorRoutes = require("./routes/vendor");
 const productRoutes = require("./routes/product");
 const orderRoutes = require("./routes/po_master");
 const authRoutes = require("./routes/auth");
+const menuRoutes = require("./routes/menu.route");
+const locationRoutes = require("./routes/location.route");
 //
 app.use("/dashboard/", manufacturerRoutes);
 app.use("/dashboard/", categoryRoutes);
@@ -36,6 +38,8 @@ app.use("/dashboard/", vendorRoutes);
 app.use("/dashboard/", productRoutes);
 app.use("/dashboard/", orderRoutes);
 app.use("/dashboard/", authRoutes);
+app.use("/dashboard/", menuRoutes);
+app.use("/dashboard/", locationRoutes);
 
 app.use(errorHandler);
 //
@@ -47,7 +51,6 @@ app.listen(port, () => {
   // sequelize.sync({ alter: true }).then(() => {
   //   console.log("Database Synced!");
   // });
-  //
   //
   sequelize.authenticate();
   console.log("Database Connected");
