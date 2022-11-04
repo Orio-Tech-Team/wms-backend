@@ -72,6 +72,7 @@ const register = asyncHandler(async (req, res) => {
     loc_code,
     account_number,
     type,
+    user_status,
   } = req.body;
   if (
     (!user_id,
@@ -134,6 +135,7 @@ const register = asyncHandler(async (req, res) => {
     phone_number,
     loc_code,
     type,
+    user_status,
     account_number,
   });
 
@@ -214,30 +216,55 @@ const createUserType = asyncHandler(async (req, res) => {
 
 const createCustomer = asyncHandler(async (req, res) => {
   const { customer_name, city, owner_name } = req.body;
-  const lastCustomer = await Customer.findAll({
-    order: [["createdAt", "DESC"]],
-  });
-  var account_number = "";
-  if (lastCustomer.length > 0) {
-    const lastElem = lastCustomer[0].account_number.split("-").pop();
-    account_number = `${city}-WMS-${+lastElem + 1}`;
-  } else {
-    account_number = `${city}-WMS-1000`;
-  }
-  const response = await Customer.create({
-    customer_name,
-    city,
-    owner_name,
-    account_number,
-  });
-  res.status(201).json("Created Successfully!");
-});
+  try {
+    const lastCustomer = await Customer.findAll({
+      order: [["createdAt", "DESC"]],
+    });
+    var account_number = "";
+    if (lastCustomer.length > 0) {
+      const lastElem = lastCustomer[0].account_number.split("-").pop();
+      account_number = `${city}-WMS-${+lastElem + 1}`;
+    } else {
+      account_number = `${city}-WMS-1000`;
+    }
 
+    const response = await Customer.create({
+      customer_name,
+      city,
+      owner_name,
+      account_number,
+    });
+    res.status(201).json("Created Successfully!");
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+//
+const getAllUsers = asyncHandler(async (req, res) => {
+  try {
+    const response = await User.findAll({
+      attributes: [
+        "id",
+        "user_name",
+        "user_id",
+        "account_number",
+        "email",
+        "phone_number",
+        "user_status",
+      ],
+    });
+    res.status(200).json(response);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+//
 module.exports = {
   login,
   register,
   createCustomer,
   createUserType,
+  getAllUsers,
   //   logout,
   //   newToken,
 };

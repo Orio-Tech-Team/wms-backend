@@ -12,7 +12,7 @@ const express = require("express"),
 //
 router.post("/manufacturer/add_manufacturer", createManufacturer);
 router.get("/manufacturer/", getManufacturer);
-router.get("/manufacturer/update/:id", getManufacturerByID);
+router.get("/manufacturer/update/:id", protect, getManufacturerByID);
 router.delete("/manufacturer/:id", deleteManufacturer);
 router.put("/manufacturer/update/", updateManufacturer);
 //

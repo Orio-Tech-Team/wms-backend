@@ -92,9 +92,7 @@ const createProduct = async (req, res) => {
         case 2:
           type = "P";
           break;
-        case 3:
-          type = "T";
-          break;
+
         default:
           break;
       }

@@ -15,7 +15,7 @@ const Product_Conversion = sequelize.define(
       type: DataTypes.STRING,
     },
     selling_unit: {
-      type: DataTypes.ENUM("Carton", "Box", "Pieces", "Strips", "Tablets"),
+      type: DataTypes.ENUM("Carton", "Box", "Pieces", "Strips"),
     },
     item_conversion: {
       type: DataTypes.STRING,

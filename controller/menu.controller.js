@@ -43,6 +43,9 @@ const getMenu = asyncHandler(async (req, res) => {
 const setRights = asyncHandler(async (req, res) => {
   const { user_id, menu_id } = req.body;
   try {
+    const deleted = await Rights.destroy({
+      where: { user_id },
+    });
     menu_id.forEach(async (item) => {
       const response = await Rights.create({
         user_id,

@@ -35,7 +35,7 @@ const createLocation = asyncHandler(async (req, res) => {
       loc_type,
       cur_type,
     });
-    return res.status(201).json("Menu Created Successfully");
+    return res.status(201).json("Location Created Successfully");
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -43,8 +43,13 @@ const createLocation = asyncHandler(async (req, res) => {
 });
 //
 const getLocation = asyncHandler(async (req, res) => {
+  const account_number = req.params.account_number;
   try {
-    const response = await Location.findAll();
+    const response = await Location.findAll({
+      where: {
+        account_number,
+      },
+    });
     return res.status(200).json(response);
   } catch (err) {
     console.log(err);
