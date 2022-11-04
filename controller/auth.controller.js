@@ -16,6 +16,7 @@ const login = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("UserId and password are required.");
   }
+  // HEllo
 
   // Check for register user name
   const user = await User.findOne({ where: { user_id } });
