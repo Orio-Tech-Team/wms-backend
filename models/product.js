@@ -94,6 +94,12 @@ const Product = sequelize.define(
     side_effects: {
       type: DataTypes.STRING,
     },
+    sales_tax_group: {
+      type: DataTypes.STRING,
+    },
+    sales_tax_percentage: {
+      type: DataTypes.STRING,
+    },
   },
   {
     initialAutoIncrement: 1000,

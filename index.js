@@ -44,9 +44,9 @@ app.use("/dashboard/", locationRoutes);
 app.use(errorHandler);
 //
 app.listen(port, () => {
-  // sequelize.sync({ force: true }).then(() => {
-  //   console.log("Database Synced!");
-  // });
+  sequelize.sync({ force: true }).then(() => {
+    console.log("Database Synced!");
+  });
   //
   // sequelize.sync({ alter: true }).then(() => {
   //   console.log("Database Synced!");

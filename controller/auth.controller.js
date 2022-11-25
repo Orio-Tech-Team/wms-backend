@@ -23,7 +23,7 @@ const login = asyncHandler(async (req, res) => {
 
   //
   if (!user) {
-    res.status(400);
+    res.status(402);
     throw new Error("User Not Found!");
   }
   //

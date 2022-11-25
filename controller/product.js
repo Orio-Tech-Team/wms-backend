@@ -45,6 +45,8 @@ const createProduct = async (req, res) => {
     productPictures,
     productTags,
     productConversion,
+    sales_tax_group,
+    sales_tax_percentage,
   } = req.body;
   //
   try {
@@ -78,6 +80,8 @@ const createProduct = async (req, res) => {
       dosage_instruction,
       side_effects,
       margin,
+      sales_tax_group,
+      sales_tax_percentage,
     });
     //
     productConversion.forEach(async (item, key) => {
@@ -165,7 +169,7 @@ const createProduct = async (req, res) => {
     //
 
     const vendorKeys = Object.keys(vendor);
-    console.log(vendorKeys);
+
     if (vendorKeys.length > 0) {
       const vendorRaw = vendor.selected.map((vendorId) => {
         {
@@ -297,6 +301,8 @@ const updateProduct = async (req, res) => {
     productPictures,
     productTags,
     productConversion,
+    sales_tax_group,
+    sales_tax_percentage,
   } = req.body;
   //
   try {
@@ -331,6 +337,8 @@ const updateProduct = async (req, res) => {
         dosage_instruction,
         side_effects,
         margin,
+        sales_tax_group,
+        sales_tax_percentage,
       },
       {
         where: {
@@ -339,7 +347,7 @@ const updateProduct = async (req, res) => {
       }
     );
     //
-    await productConversion.destroy({
+    await Product_Conversion.destroy({
       where: {
         productId: id,
       },
