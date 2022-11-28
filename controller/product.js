@@ -598,6 +598,25 @@ const getProductFormula = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+//
+const getProductConversion = async (req, res) => {
+  const ids = req.body.ids;
+  var idString = "";
+  ids.forEach((id) => {
+    idString += `('${id}'),`;
+  });
+  idString = idString.substring(0, idString.length - 1);
+  try {
+    const [response, metaData] = await sequelize.query(
+      `SELECT * FROM product_conversions WHERE (productId) IN (${idString})`
+    );
+    return res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
 module.exports = {
   createProduct,
   getProduct,
@@ -611,4 +630,5 @@ module.exports = {
   getProductTags,
   getProductImages,
   getProductFormula,
+  getProductConversion,
 };

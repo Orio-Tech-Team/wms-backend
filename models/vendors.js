@@ -61,10 +61,16 @@ const Vendor = sequelize.define(
     business_address: {
       type: DataTypes.STRING,
     },
+    city: {
+      type: DataTypes.STRING,
+    },
     business_phone_number: {
       type: DataTypes.STRING,
     },
     email_address: {
+      type: DataTypes.STRING,
+    },
+    payment_terms: {
       type: DataTypes.STRING,
     },
     payment_method: {

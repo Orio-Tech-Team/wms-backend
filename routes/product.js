@@ -11,6 +11,7 @@ const {
   getProductTags,
   getProductImages,
   getProductFormula,
+  getProductConversion,
 } = require("../controller/product");
 //
 //
@@ -29,5 +30,6 @@ router.get("/product/product_category/:id", getProductCategory);
 router.get("/product/product_tags/:id", getProductTags);
 router.get("/product/product_generic_formula/:id", getProductFormula);
 router.get("/product/product_images/:id", getProductImages);
+router.post("/product/product_conversion/", getProductConversion);
 //
 module.exports = router;
