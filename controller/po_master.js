@@ -3,27 +3,74 @@ const PO_Master = require("../models/po_master");
 const sequelize = require("../models/index");
 //
 const createOrder = async (req, res) => {
-  // const { vendor_id, product_id, expected_date, ordered_quantity } = req.body;
   try {
-    console.log(req.body);
-    const dataToSend = {
-      vendor_id: req.body[0].vendorId,
-      vendor_name: req.body[0].vendorName,
-      expected_date: req.body[0].expected_date,
-    };
-    const po_master_data = await PO_Master.create(dataToSend);
+    const {
+      vendor_id,
+      vendor_name,
+      address,
+      city,
+      ntn,
+      strn,
+      payment_terms,
+      delivery_date,
+      delivery_location,
+      po_type,
+      orders,
+      subtotal,
+      total_discounted_price,
+      total_tax,
+      grand_total,
+    } = req.body;
     //
-    const dataForPO_detail = req.body.map((item) => {
+
+    //
+    const po_master_response = await PO_Master.create({
+      vendor_id,
+      vendor_name,
+      address,
+      city,
+      ntn,
+      strn,
+      payment_terms,
+      expected_date: delivery_date,
+      delivery_location,
+      po_type,
+      order_status: grand_total <= 500000 ? "Approved" : "Pending",
+      subtotal,
+      total_discounted_price,
+      tax: total_tax,
+      grand_total,
+    });
+    //
+    const po_detail_data_for_bulk_create = orders.map((each_item) => {
       return {
-        product_id: item.productId,
-        product_name: item.productName,
-        ordered_quantity: item.quantity,
-        po_id: po_master_data.id,
+        po_id: po_master_response.id,
+        product_id: each_item.product_id,
+        product_name: each_item.product_name,
+        manufacturer: each_item.manufacturer,
+        required_quantity: +each_item.required_quantity,
+        trade_price: +each_item.trade_price,
+        total_price: +each_item.total,
+        discounted_price: +each_item.discount,
+        taxed_price: +each_item.taxed_price,
+        foc: each_item.foc,
+        item_conversion:
+          each_item.item_conversion[each_item.item_conversion.length - 1],
+        trade_discount: +each_item.trade_percentage,
+        sales_tax_percentage: +each_item.sales_tax_percentage,
+        uom: each_item.unit_of_measurement,
       };
     });
-    const po_detail_data = await PO_Detail.bulkCreate(dataForPO_detail);
     //
-    return res.status(200).json("Successfully Created!");
+    const po_detail_response = await PO_Detail.bulkCreate(
+      po_detail_data_for_bulk_create
+    );
+    //
+    return res.status(200).json({
+      po_id: po_master_response.id,
+    });
+
+    //
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -32,7 +79,13 @@ const createOrder = async (req, res) => {
 //
 const getOrder = async (req, res) => {
   try {
-    const order_response = await PO_Master.findAll();
+    const order_response = await PO_Master.findAll({
+      include: [
+        {
+          model: PO_Detail,
+        },
+      ],
+    });
     return res.status(200).json(order_response);
   } catch (err) {
     console.log(err);

@@ -10,38 +10,80 @@ const PO_Detail = sequelize.define(
       autoIncrement: true,
       unique: true,
     },
+    //
     product_id: {
       type: DataTypes.INTEGER,
     },
+    //
     product_name: {
       type: DataTypes.STRING,
     },
-    ordered_quantity: {
+    //
+    manufacturer: {
+      type: DataTypes.STRING,
+    },
+    //
+    required_quantity: {
       type: DataTypes.INTEGER,
     },
+    //
     received_quantity: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    maximum_retail_price: {
+    //
+    trade_price: {
       type: DataTypes.FLOAT,
       defaultValue: 0.0,
     },
+    //
+    total_price: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    //
     discounted_price: {
       type: DataTypes.FLOAT,
       defaultValue: 0.0,
     },
-    purchasing_price: {
+    //
+    taxed_price: {
       type: DataTypes.FLOAT,
-      defaultValue: 0,
+      defaultValue: 0.0,
     },
+    //
+    foc: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    //
+    item_conversion: {
+      type: DataTypes.STRING,
+    },
+    //
+    trade_discount: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    //
+    sales_tax_percentage: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    //
+    uom: {
+      type: DataTypes.STRING,
+    },
+    //
     batch_no: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    //
     batch_expiry: {
       type: DataTypes.STRING,
     },
+    //
     comments: {
       type: DataTypes.STRING,
     },

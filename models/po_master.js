@@ -17,17 +17,53 @@ const PO_Master = sequelize.define(
     vendor_name: {
       type: DataTypes.STRING,
     },
-
+    address: {
+      type: DataTypes.STRING,
+    },
+    city: {
+      type: DataTypes.STRING,
+    },
+    ntn: {
+      type: DataTypes.STRING,
+    },
+    strn: {
+      type: DataTypes.STRING,
+    },
+    payment_terms: {
+      type: DataTypes.STRING,
+    },
     expected_date: {
       type: DataTypes.DATE,
+    },
+    delivery_location: {
+      type: DataTypes.STRING,
+    },
+    po_type: {
+      type: DataTypes.STRING,
     },
     arrival_date: {
       type: DataTypes.DATE,
       defaultValue: null,
     },
     order_status: {
-      type: DataTypes.ENUM("In-Progress", "Received"),
-      defaultValue: "In-Progress",
+      type: DataTypes.ENUM("Approved", "Pending", "Received"),
+      defaultValue: "Pending",
+    },
+    subtotal: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    total_discounted_price: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    tax: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
+    grand_total: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
     },
   },
   {
