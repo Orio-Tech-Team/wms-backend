@@ -128,7 +128,7 @@ const Vendor = sequelize.define(
       type: DataTypes.STRING,
     },
     tax_exemption_validity: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
     },
   },
   {
