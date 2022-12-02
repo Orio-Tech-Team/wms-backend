@@ -79,27 +79,12 @@ const createOrder = async (req, res) => {
 //
 const getOrder = async (req, res) => {
   try {
-    const order_response = await PO_Master.findAll({
-      include: [
-        {
-          model: PO_Detail,
-        },
-      ],
+    const order_response = await PO_Master.findAll();
+    const order_detail_response = await PO_Detail.findAll();
+    return res.status(200).json({
+      order_response: order_response,
+      order_detail_response: order_detail_response,
     });
-    return res.status(200).json(order_response);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-};
-//
-const getDetails = async (req, res) => {
-  const id = req.params.id;
-  try {
-    const order_response = await PO_Detail.findAll({
-      where: { po_id: id },
-    });
-    return res.status(200).json(order_response);
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -153,6 +138,24 @@ const orderReceived = async (req, res) => {
   }
 };
 //
+const orderApproved = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const order_response = await PO_Master.update(
+      {
+        order_status: "Approved",
+      },
+      {
+        where: { id },
+      }
+    );
+    return res.status(200).json("Updated Successfully!");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
 const productDetailUpdate = async (req, res) => {
   console.log("hello");
 };
@@ -160,8 +163,8 @@ const productDetailUpdate = async (req, res) => {
 module.exports = {
   createOrder,
   getOrder,
-  getDetails,
   updateDetails,
   orderReceived,
+  orderApproved,
   productDetailUpdate,
 };

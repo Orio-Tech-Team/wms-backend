@@ -1,5 +1,6 @@
 const sequelize = require("./index");
 const { DataTypes } = require("sequelize");
+const PO_Master = require("./po_master");
 //
 const PO_Detail = sequelize.define(
   "po_detail",
@@ -93,4 +94,9 @@ const PO_Detail = sequelize.define(
   }
 );
 //
+PO_Master.hasOne(PO_Detail, {
+  foreignKey: "po_id",
+  onDelete: "CASCADE",
+});
+
 module.exports = PO_Detail;

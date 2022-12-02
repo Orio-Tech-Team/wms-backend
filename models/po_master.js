@@ -72,10 +72,6 @@ const PO_Master = sequelize.define(
 );
 //
 //
-PO_Master.hasOne(PO_Detail, {
-  foreignKey: "po_id",
-  onDelete: "CASCADE",
-});
-//
+
 //
 module.exports = PO_Master;

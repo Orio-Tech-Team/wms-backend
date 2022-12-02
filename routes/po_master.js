@@ -1,8 +1,9 @@
 const {
   createOrder,
   getOrder,
-  getDetails,
+  orderApproved,
   orderReceived,
+
   productDetailUpdate,
   updateDetails,
 } = require("../controller/po_master");
@@ -12,9 +13,9 @@ const express = require("express"),
 //
 router.post("/product_order/add_product_order/", createOrder);
 router.get("/product_order/", getOrder);
-router.get("/product_order/details/:id", getDetails);
 router.put("/product_order/update_details/", updateDetails);
 router.put("/purchase_order/order_received/:id", orderReceived);
+router.put("/purchase_order/order_approved/:id", orderApproved);
 router.put("/purchase_order/product_details/check/:id", productDetailUpdate);
 //
 module.exports = router;
