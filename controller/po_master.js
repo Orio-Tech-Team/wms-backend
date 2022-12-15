@@ -13,6 +13,7 @@ const createOrder = async (req, res) => {
       strn,
       payment_terms,
       delivery_date,
+      order_type,
       delivery_location,
       po_type,
       orders,
@@ -21,8 +22,8 @@ const createOrder = async (req, res) => {
       total_tax,
       grand_total,
     } = req.body;
-    //
 
+    //
     //
     const po_master_response = await PO_Master.create({
       vendor_id,
@@ -33,9 +34,10 @@ const createOrder = async (req, res) => {
       strn,
       payment_terms,
       expected_date: delivery_date,
+      order_type,
       delivery_location,
       po_type,
-      order_status: grand_total <= 500000 ? "Approved" : "Pending",
+      order_status: grand_total <= 5000 ? "Approved" : "Pending",
       subtotal,
       total_discounted_price,
       tax: total_tax,

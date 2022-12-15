@@ -31,6 +31,7 @@ const orderRoutes = require("./routes/po_master");
 const authRoutes = require("./routes/auth");
 const menuRoutes = require("./routes/menu.route");
 const locationRoutes = require("./routes/location.route");
+const grnRoutes = require("./routes/grn.route");
 //
 app.use("/dashboard/", manufacturerRoutes);
 app.use("/dashboard/", categoryRoutes);
@@ -40,7 +41,8 @@ app.use("/dashboard/", orderRoutes);
 app.use("/dashboard/", authRoutes);
 app.use("/dashboard/", menuRoutes);
 app.use("/dashboard/", locationRoutes);
-
+app.use("/dashboard/grn/", grnRoutes);
+//
 app.use(errorHandler);
 //
 app.listen(port, () => {
@@ -49,6 +51,10 @@ app.listen(port, () => {
   // });
   //
   // sequelize.sync({ alter: true }).then(() => {
+  //   console.log("Database Synced!");
+  // });
+  //
+  // sequelize.sync().then(() => {
   //   console.log("Database Synced!");
   // });
   //

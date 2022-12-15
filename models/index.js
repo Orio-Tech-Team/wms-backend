@@ -8,8 +8,7 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     dialect: "mysql",
-    host: "67.222.28.145",
-    // host: "127.0.0.1",
+    host: process.env.DB_URL,
   }
 );
 module.exports = sequelize;

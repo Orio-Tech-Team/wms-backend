@@ -49,6 +49,9 @@ const PO_Master = sequelize.define(
       type: DataTypes.ENUM("Approved", "Pending", "Received"),
       defaultValue: "Pending",
     },
+    order_type: {
+      type: DataTypes.ENUM("Normal", "Advance"),
+    },
     subtotal: {
       type: DataTypes.FLOAT,
       defaultValue: 0.0,

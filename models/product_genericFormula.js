@@ -3,7 +3,7 @@ const { DataTypes } = require("sequelize");
 const Product = require("./product");
 //
 const Product_GenericFormula = sequelize.define(
-  "product_genericFormula",
+  "product_genericformula",
   {
     id: {
       type: DataTypes.INTEGER,
