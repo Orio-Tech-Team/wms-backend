@@ -88,6 +88,11 @@ const PO_Detail = sequelize.define(
     comments: {
       type: DataTypes.STRING,
     },
+    //
+    quality_check: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     initialAutoIncrement: 1000,

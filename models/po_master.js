@@ -46,8 +46,8 @@ const PO_Master = sequelize.define(
       defaultValue: null,
     },
     order_status: {
-      type: DataTypes.ENUM("Approved", "Pending", "Received"),
-      defaultValue: "Pending",
+      type: DataTypes.ENUM("App", "Pen", "Rec", "PRec"),
+      defaultValue: "Pen",
     },
     order_type: {
       type: DataTypes.ENUM("Normal", "Advance"),

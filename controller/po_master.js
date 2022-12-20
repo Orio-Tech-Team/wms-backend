@@ -37,7 +37,7 @@ const createOrder = async (req, res) => {
       order_type,
       delivery_location,
       po_type,
-      order_status: grand_total <= 5000 ? "Approved" : "Pending",
+      order_status: grand_total <= 5000 ? "App" : "Pen",
       subtotal,
       total_discounted_price,
       tax: total_tax,
@@ -126,7 +126,7 @@ const orderReceived = async (req, res) => {
   try {
     const order_response = await PO_Master.update(
       {
-        order_status: "Received",
+        order_status: "Rec",
         arrival_date: new Date(),
       },
       {
@@ -145,13 +145,32 @@ const orderApproved = async (req, res) => {
   try {
     const order_response = await PO_Master.update(
       {
-        order_status: "Approved",
+        order_status: "App",
       },
       {
         where: { id },
       }
     );
     return res.status(200).json("Updated Successfully!");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
+const quality_check = async (req, res) => {
+  const { id, status } = req.body;
+  try {
+    await PO_Detail.update(
+      {
+        quality_check: status,
+      },
+      {
+        where: { id },
+      }
+    );
+    //
+    return res.status(200).json("Updated Successful!");
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -169,4 +188,5 @@ module.exports = {
   orderReceived,
   orderApproved,
   productDetailUpdate,
+  quality_check,
 };
