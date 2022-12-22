@@ -21,7 +21,6 @@ app.use(express.static("assets"));
 app.use("/product_images", express.static("images"));
 //
 const port = process.env.PORT || 3002;
-//
 // routes imports and use
 const manufacturerRoutes = require("./routes/manufacturer");
 const categoryRoutes = require("./routes/category");

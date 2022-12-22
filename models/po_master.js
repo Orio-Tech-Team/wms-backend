@@ -26,6 +26,9 @@ const PO_Master = sequelize.define(
     ntn: {
       type: DataTypes.STRING,
     },
+    advance_income: {
+      type: DataTypes.FLOAT,
+    },
     strn: {
       type: DataTypes.STRING,
     },
