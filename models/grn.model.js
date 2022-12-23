@@ -66,6 +66,10 @@ const GRN = sequelize.define(
       type: DataTypes.ENUM("R", "PR"),
       defaultValue: "R",
     },
+    qc_check: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     initialAutoIncrement: 1000,
