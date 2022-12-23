@@ -7,7 +7,7 @@ const create = async (req, res) => {
       po_id: po_id,
       product_id: each_item.product_id,
       product_name: each_item.product_name,
-      required_quantity: each_item.required_quantity,
+      required_quantity: +each_item.required_quantity - +each_item.received_quantity,
       received_quantity: each_item.received_quantity,
       maximum_retail_price: each_item.maximum_retail_price,
       trade_price: each_item.trade_price,
@@ -28,6 +28,15 @@ const create = async (req, res) => {
     };
   });
   try {
+    const update = await GRN.update({
+      is_updatable: false,
+    },
+      {
+        where: {
+          po_id: po_id
+        }
+      })
+    // 
     const response = await GRN.bulkCreate(dataToStore);
     return res.status(200).json("Success");
   } catch (err) {
@@ -59,6 +68,6 @@ const findOne = async (req, res) => {
   }
 };
 //
-const deleteOne = async (req, res) => {};
+const deleteOne = async (req, res) => { };
 //
 module.exports = { create, findAll, findOne, deleteOne };
