@@ -95,7 +95,6 @@ const qualityReject = async (req, res) => {
     const [[count]] = await sequelize.query(
       `SELECT count(*) as cnt from grns where product_id=${product_id} and po_id = ${po_id}`
     );
-    console.log(count.cnt);
     const response = await GRN.update(
       {
         is_updatable: true,

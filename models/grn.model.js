@@ -47,7 +47,7 @@ const GRN = sequelize.define(
       allowNull: false,
     },
     batch_expiry: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     comments: {
@@ -65,6 +65,10 @@ const GRN = sequelize.define(
     grn_status: {
       type: DataTypes.ENUM("R", "PR", "D"),
       defaultValue: "R",
+    },
+    foc: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     qc_check: {
       type: DataTypes.BOOLEAN,
