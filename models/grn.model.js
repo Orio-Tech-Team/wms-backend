@@ -63,7 +63,7 @@ const GRN = sequelize.define(
       defaultValue: false,
     },
     grn_status: {
-      type: DataTypes.ENUM("R", "PR"),
+      type: DataTypes.ENUM("R", "PR", "D"),
       defaultValue: "R",
     },
     qc_check: {
