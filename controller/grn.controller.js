@@ -90,11 +90,11 @@ const qualityChecker = async (req, res) => {
 };
 //
 const qualityReject = async (req, res) => {
-  const { id, received_quantity, product_id, po_id, required_quantity } =
+  const { id, received_quantity, product_id, po_id, required_quantity, foc } =
     req.body;
   try {
     const [[count]] = await sequelize.query(
-      `SELECT count(*) as cnt from grns where product_id=${product_id} and po_id = ${po_id}`
+      `SELECT count(*) as cnt from grns where product_id=${product_id} and po_id = ${po_id} AND foc = ${foc}`
     );
     const response = await GRN.update(
       {
