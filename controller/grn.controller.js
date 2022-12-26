@@ -16,6 +16,7 @@ const create = async (req, res) => {
       batch_no: each_item.batch_no,
       batch_expiry: each_item.batch_expiry,
       comments: each_item.comments,
+      foc: grnData.foc === "Yes",
       remaining_quantity:
         +each_item.required_quantity - +each_item.received_quantity,
       is_updatable:
