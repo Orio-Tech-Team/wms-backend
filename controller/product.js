@@ -617,6 +617,20 @@ const getProductConversion = async (req, res) => {
   }
 };
 //
+const getAllProductConversion = async (req, res) => {
+  try {
+    const [response, metaData] = await sequelize.query(
+      `SELECT products.id as product_id,
+  product_conversions.selling_unit,
+  product_conversions.item_conversion FROM products left join product_conversions on products.id = product_conversions.productId GROUP BY products.id order by product_conversions.id DESC ;`
+    );
+    return res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
 module.exports = {
   createProduct,
   getProduct,
@@ -631,4 +645,5 @@ module.exports = {
   getProductImages,
   getProductFormula,
   getProductConversion,
+  getAllProductConversion,
 };
