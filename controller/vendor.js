@@ -1,3 +1,4 @@
+const selectAllFromArray = require("../functions/array_modifier");
 const sequelize = require("../models");
 const Vendor = require("../models/vendors");
 const Vendor_Manufacturer = require("../models/vendor_manufacturer");
@@ -91,10 +92,10 @@ const createVendor = async (req, res) => {
       minimum_order_quantity,
     });
     //
-    const junctionValues = manufacturer.selected.map((id) => {
+    const junctionValues = manufacturer.map((manufacturer_id) => {
       return {
         vendorId: vendor_data.id,
-        manufacturerId: id,
+        manufacturerId: manufacturer_id,
       };
     });
     //
@@ -144,14 +145,32 @@ const deleteVendor = async (req, res) => {
 };
 //
 const findVendor = async (req, res) => {
+  var manufacturer_id_temp = [];
+  var data_to_return;
   try {
     const id = req.params.id;
-    const vendor = await Vendor.findAll({
+    const [vendor] = await Vendor.findAll({
       where: {
         id,
       },
     });
-    return res.json(vendor);
+    const manufacturer_vendor = await Vendor_Manufacturer.findAll({
+      where: {
+        vendorId: id,
+      },
+    });
+    manufacturer_vendor.forEach((each_item) => {
+      manufacturer_id_temp.push(each_item.manufacturerId);
+    });
+    //
+    const query = selectAllFromArray(manufacturer_id_temp);
+    const [manufacturer_response] = await sequelize.query(
+      `SELECT id,manufacturer_name,line_of_business,manufacturer_status FROM manufacturers WHERE (id) IN ${query}`
+    );
+    return res.json({
+      ...vendor.dataValues,
+      manufacturer: manufacturer_response,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
