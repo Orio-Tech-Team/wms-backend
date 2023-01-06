@@ -102,7 +102,10 @@ const createVendor = async (req, res) => {
       junctionValues
     );
     //
-    return res.status(200).json("Created Successfully!");
+    return res.status(200).json({
+      data: [vendor_data.id],
+      message: "Created Successfully!",
+    });
     //
   } catch (err) {
     console.log(err);
