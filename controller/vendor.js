@@ -283,7 +283,10 @@ const updateVendor = async (req, res) => {
       junctionTableValues
     );
     //
-    return res.json(vendor);
+    return res.json({
+      data: [id],
+      message: "Created Successfully!",
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
