@@ -108,94 +108,84 @@ const createProduct = async (req, res) => {
       });
     });
     //
-    var base64Data = productPictures.map((item) =>
-      item.image_url.replace(/^data:image\/png;base64,/, "")
-    );
-    const product_url = base64Data.map((item, key) => {
-      require("fs").writeFile(
-        `./assets/product_images/${product_data.id + "_" + key}.png`,
-        item,
-        "base64",
-        function (err) {
-          console.log(err);
-        }
+    if (productPictures && productPictures.length > 0) {
+      var base64Data = productPictures.map((item) =>
+        item.image_url.replace(/^data:image\/png;base64,/, "")
       );
-      return `/product_images/${product_data.id + "_" + key}.png`;
-    });
-    const productPicturesRaw = product_url.map((eachUrl) => {
-      return {
-        productId: product_data.id,
-        image_url: eachUrl,
-      };
-    });
-    const productPictureResponse = await Product_Image.bulkCreate(
-      productPicturesRaw
-    );
-
-    const productTagsRaw = productTags
-      .map(async (eachItem) => {
-        if (productTags.length > 0) {
-          const tagsData = await Tag.findOrCreate({
-            where: { tag: eachItem },
-          });
-          return {
-            productId: product_data.id,
-            tag_name: eachItem,
-          };
-        }
-        return "";
-      })
-      .filter((eachValue) => {
-        return eachValue != "";
+      const product_url = base64Data.map((item, key) => {
+        require("fs").writeFile(
+          `./assets/product_images/${product_data.id + "_" + key}.png`,
+          item,
+          "base64",
+          function (err) {
+            console.log(err);
+          }
+        );
+        return `/product_images/${product_data.id + "_" + key}.png`;
       });
-    const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+      const productPicturesRaw = product_url.map((eachUrl) => {
+        return {
+          productId: product_data.id,
+          image_url: eachUrl,
+        };
+      });
+      const productPictureResponse = await Product_Image.bulkCreate(
+        productPicturesRaw
+      );
+    }
     //
-    const productFormulaRaw = productGenericFormula
-      .map((eachItem) => {
-        if (productGenericFormula.length > 0) {
-          return {
-            productId: product_data.id,
-            product_generic_formula: eachItem,
-          };
-        }
-        return "";
-      })
-      .filter((eachValue) => {
-        return eachValue != "";
+    if (productTags.length > 0) {
+      const product_tags_temp = [];
+      productTags.forEach((each_tag) => {
+        product_tags_temp.push({
+          productId: product_data.id,
+          tag_name: each_tag,
+        });
       });
-    const productFormulaResponse = await Product_GenericFormula.bulkCreate(
-      productFormulaRaw
-    );
+      const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+    }
     //
-
-    const vendorKeys = Object.keys(vendor);
-
-    if (vendorKeys.length > 0) {
-      const vendorRaw = vendor.selected.map((vendorId) => {
-        {
-          return {
-            vendorId: vendorId,
-            productId: product_data.id,
-          };
-        }
+    if (productGenericFormula.length > 0) {
+      var generic_formula_temp = [];
+      productGenericFormula.forEach((each_formula) => {
+        generic_formula_temp.push({
+          productId: product_data.id,
+          product_generic_formula: each_formula,
+        });
       });
-      const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
+      const productFormulaResponse = await Product_GenericFormula.bulkCreate(
+        generic_formula_temp
+      );
+    }
+    //
+    if (vendor.length > 0) {
+      const vendor_temp = vendor.map((each_vendor) => {
+        return {
+          vendorId: each_vendor,
+          productId: product_data.id,
+        };
+      });
+      const productVendorResponse = await Product_Vendor.bulkCreate(
+        vendor_temp
+      );
     }
 
-    const categoryKeys = Object.keys(category);
-    if (categoryKeys.length > 0) {
-      const categoryRaw = category.selected.map((categoryId) => {
+    if (category.length > 0) {
+      const category_temp = category.map((each_category) => {
         return {
-          categoryId: categoryId,
+          categoryId: each_category,
           productId: product_data.id,
         };
       });
       const productCategoryResponse = await Product_Category.bulkCreate(
-        categoryRaw
+        category_temp
       );
     }
     //
-    return res.status(200).json("Created Successfully!");
+    return res.status(200).json({
+      data: [product_data.id],
+      message: "Success",
+    });
     //
   } catch (err) {
     console.log(err);
@@ -378,6 +368,7 @@ const updateProduct = async (req, res) => {
       });
     });
     //
+
     for (let i = 0; i < 3; i++) {
       require("fs").stat(
         `./assets/product_images/${id + "_" + i}.png`,
@@ -424,89 +415,100 @@ const updateProduct = async (req, res) => {
     });
     //
     //
-    var base64Data = productPictures.map((item) =>
-      item.image_url.replace(/^data:image\/png;base64,/, "")
-    );
-    const product_url = base64Data.map((item, key) => {
-      require("fs").writeFile(
-        `./assets/product_images/${product_data.id + "_" + key}.png`,
-        item,
-        "base64",
-        function (err) {
-          console.log(err);
-        }
+    if (productPictures && productPictures.length > 0) {
+      var base64Data = productPictures.map((item) =>
+        item.image_url.replace(/^data:image\/png;base64,/, "")
       );
-      return `/product_images/${product_data.id + "_" + key}.png`;
-    });
-    const productPicturesRaw = product_url.map((eachUrl) => {
-      return {
-        productId: id,
-        image_url: eachUrl,
-      };
-    });
-    const productPictureResponse = await Product_Image.bulkCreate(
-      productPicturesRaw
-    );
+      const product_url = base64Data.map((item, key) => {
+        require("fs").writeFile(
+          `./assets/product_images/${product_data.id + "_" + key}.png`,
+          item,
+          "base64",
+          function (err) {
+            console.log(err);
+          }
+        );
+        return `/product_images/${product_data.id + "_" + key}.png`;
+      });
+      const productPicturesRaw = product_url.map((eachUrl) => {
+        return {
+          productId: id,
+          image_url: eachUrl,
+        };
+      });
+      const productPictureResponse = await Product_Image.bulkCreate(
+        productPicturesRaw
+      );
+      //
+      const productTagsRaw = productTags
+        .map((eachItem) => {
+          if (productTags.length > 0) {
+            return {
+              productId: id,
+              tag_name: eachItem,
+            };
+          }
+          return "";
+        })
+        .filter((eachValue) => {
+          return eachValue != "";
+        });
+      const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+    }
     //
-    const productTagsRaw = productTags
-      .map((eachItem) => {
-        if (productTags.length > 0) {
-          return {
-            productId: id,
-            tag_name: eachItem,
-          };
-        }
-        return "";
-      })
-      .filter((eachValue) => {
-        return eachValue != "";
-      });
-    const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
     //
-    const productGenericFormulaRaw = productGenericFormula
-      .map((eachItem) => {
-        if (productGenericFormula.length > 0) {
-          return {
-            productId: id,
-            product_generic_formula: eachItem,
-          };
-        }
-        return "";
-      })
-      .filter((eachValue) => {
-        return eachValue != "";
+    if (productTags.length > 0) {
+      const product_tags_temp = [];
+      productTags.forEach((each_tag) => {
+        product_tags_temp.push({
+          productId: product_data.id,
+          tag_name: each_tag,
+        });
       });
-    const productGenericFormulaResponse =
-      await Product_GenericFormula.bulkCreate(productGenericFormulaRaw);
-
-    const vendorKeys = Object.keys(vendor);
-    console.log(vendorKeys);
-    if (vendorKeys.length > 0) {
-      const vendorRaw = vendor.selected.map((vendorId) => {
-        {
-          return {
-            vendorId: vendorId,
-            productId: id,
-          };
-        }
+      const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+    }
+    //
+    if (productGenericFormula.length > 0) {
+      var generic_formula_temp = [];
+      productGenericFormula.forEach((each_formula) => {
+        generic_formula_temp.push({
+          productId: product_data.id,
+          product_generic_formula: each_formula,
+        });
       });
-      const productVendorResponse = await Product_Vendor.bulkCreate(vendorRaw);
+      const productFormulaResponse = await Product_GenericFormula.bulkCreate(
+        generic_formula_temp
+      );
+    }
+    //
+    if (vendor.length > 0) {
+      const vendor_temp = vendor.map((each_vendor) => {
+        return {
+          vendorId: each_vendor,
+          productId: product_data.id,
+        };
+      });
+      const productVendorResponse = await Product_Vendor.bulkCreate(
+        vendor_temp
+      );
     }
 
-    const categoryKeys = Object.keys(category);
-    if (categoryKeys.length > 0) {
-      const categoryRaw = category.selected.map((categoryId) => {
+    if (category.length > 0) {
+      const category_temp = category.map((each_category) => {
         return {
-          categoryId: categoryId,
-          productId: id,
+          categoryId: each_category,
+          productId: product_data.id,
         };
       });
       const productCategoryResponse = await Product_Category.bulkCreate(
-        categoryRaw
+        category_temp
       );
     }
     //
-    return res.status(200).json("Updated Successfully!");
+    return res.status(200).json({
+      data: id,
+      message: "success",
+    });
     //
   } catch (err) {
     console.log(err);

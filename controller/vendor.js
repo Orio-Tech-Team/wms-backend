@@ -271,7 +271,7 @@ const updateVendor = async (req, res) => {
       },
     });
     //
-    const junctionTableValues = manufacturer.selected.map((manufacturerId) => {
+    const junctionTableValues = manufacturer.map((manufacturerId) => {
       return {
         vendorId: id,
         manufacturerId: manufacturerId,
@@ -285,7 +285,7 @@ const updateVendor = async (req, res) => {
     //
     return res.json({
       data: [id],
-      message: "Created Successfully!",
+      message: "Updated Successfully!",
     });
   } catch (err) {
     console.log(err);

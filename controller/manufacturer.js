@@ -9,7 +9,10 @@ const createManufacturer = async (req, res) => {
       line_of_business,
       manufacturer_status,
     });
-    return res.json(manufacturer);
+    return res.json({
+      data: [manufacturer.id],
+      message: "Created Successfully!",
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -70,7 +73,10 @@ const updateManufacturer = async (req, res) => {
         where: { id },
       }
     );
-    return res.json(manufacturer);
+    return res.json({
+      data: [manufacturer.id],
+      message: "Created Successfully!",
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);

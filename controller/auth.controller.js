@@ -165,7 +165,11 @@ const createUserType = asyncHandler(async (req, res) => {
   const { type } = req.body;
   try {
     const response = await UserType.create({ type });
-    return res.status(201).json(type + " " + "Successfully Created!");
+    return res.status(201).json({
+      data: [],
+      message: `User type: ${type} created successfully!`,
+      status: 200,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
