@@ -369,29 +369,29 @@ const updateProduct = async (req, res) => {
     });
     //
 
-    for (let i = 0; i < 3; i++) {
-      require("fs").stat(
-        `./assets/product_images/${id + "_" + i}.png`,
-        function (err, stats) {
-          if (err) {
-            return console.error(err);
-          }
+    // for (let i = 0; i < 3; i++) {
+    //   require("fs").stat(
+    //     `./assets/product_images/${id + "_" + i}.png`,
+    //     function (err, stats) {
+    //       if (err) {
+    //         return console.error(err);
+    //       }
 
-          require("fs").unlink(
-            `./assets/product_images/${id + "_" + i}.png`,
-            function (err) {
-              if (err) return console.log(err);
-              console.log("file deleted successfully");
-            }
-          );
-        }
-      );
-    }
-    const deleteProductImage = await Product_Image.destroy({
-      where: {
-        productId: id,
-      },
-    });
+    //       require("fs").unlink(
+    //         `./assets/product_images/${id + "_" + i}.png`,
+    //         function (err) {
+    //           if (err) return console.log(err);
+    //           console.log("file deleted successfully");
+    //         }
+    //       );
+    //     }
+    //   );
+    // }
+    // const deleteProductImage = await Product_Image.destroy({
+    //   where: {
+    //     productId: id,
+    //   },
+    // });
 
     const deleteProductTag = await Product_Tag.destroy({
       where: {
@@ -447,7 +447,7 @@ const updateProduct = async (req, res) => {
       const product_tags_temp = [];
       productTags.forEach((each_tag) => {
         product_tags_temp.push({
-          productId: product_data.id,
+          productId: id,
           tag_name: each_tag,
         });
       });
@@ -460,7 +460,7 @@ const updateProduct = async (req, res) => {
       var generic_formula_temp = [];
       productGenericFormula.forEach((each_formula) => {
         generic_formula_temp.push({
-          productId: product_data.id,
+          productId: id,
           product_generic_formula: each_formula,
         });
       });
@@ -473,7 +473,7 @@ const updateProduct = async (req, res) => {
       const vendor_temp = vendor.map((each_vendor) => {
         return {
           vendorId: each_vendor,
-          productId: product_data.id,
+          productId: id,
         };
       });
       const productVendorResponse = await Product_Vendor.bulkCreate(
@@ -485,7 +485,7 @@ const updateProduct = async (req, res) => {
       const category_temp = category.map((each_category) => {
         return {
           categoryId: each_category,
-          productId: product_data.id,
+          productId: id,
         };
       });
       const productCategoryResponse = await Product_Category.bulkCreate(
@@ -494,7 +494,7 @@ const updateProduct = async (req, res) => {
     }
     //
     return res.status(200).json({
-      data: id,
+      data: [id],
       message: "success",
     });
     //
