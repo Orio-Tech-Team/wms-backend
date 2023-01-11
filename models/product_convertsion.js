@@ -20,6 +20,9 @@ const Product_Conversion = sequelize.define(
     item_conversion: {
       type: DataTypes.STRING,
     },
+    sorting: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     initialAutoIncrement: 1000,

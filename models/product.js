@@ -100,8 +100,11 @@ const Product = sequelize.define(
     sales_tax_percentage: {
       type: DataTypes.STRING,
     },
-    dosage_instructions: {
+    dosage_instruction: {
       type: DataTypes.STRING,
+    },
+    discount_type: {
+      type: DataTypes.ENUM("price", "percentage"),
     },
   },
   {

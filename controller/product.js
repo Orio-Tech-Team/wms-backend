@@ -47,6 +47,7 @@ const createProduct = async (req, res) => {
     productConversion,
     sales_tax_group,
     sales_tax_percentage,
+    discount_type,
   } = req.body;
   //
   try {
@@ -61,6 +62,7 @@ const createProduct = async (req, res) => {
       trade_price,
       discounted_price,
       maximum_retail_price,
+      dosage_instruction,
       sku_minimum_level,
       sku_maximum_level,
       sku_reorder_level,
@@ -82,26 +84,38 @@ const createProduct = async (req, res) => {
       margin,
       sales_tax_group,
       sales_tax_percentage,
+      discount_type,
     });
     //
+    console.log(product_data.id);
     productConversion.forEach(async (item, key) => {
-      let type = "";
+      let type_temp = {};
       switch (key) {
         case 0:
-          type = "C";
+          type_temp = {
+            type: "C",
+            sorting: 0,
+          };
           break;
         case 1:
-          type = "B";
+          type_temp = {
+            type: "B",
+            sorting: 1,
+          };
           break;
         case 2:
-          type = "P";
+          type_temp = {
+            type: "C",
+            sorting: 2,
+          };
           break;
 
         default:
           break;
       }
       await Product_Conversion.create({
-        type: type,
+        type: type_temp.type,
+        sorting: type_temp.sorting,
         selling_unit: item.selling_unit,
         item_conversion: item.item_conversion,
         productId: product_data.id,
@@ -295,6 +309,7 @@ const updateProduct = async (req, res) => {
     productConversion,
     sales_tax_group,
     sales_tax_percentage,
+    discount_type,
   } = req.body;
   //
   try {
@@ -331,6 +346,7 @@ const updateProduct = async (req, res) => {
         margin,
         sales_tax_group,
         sales_tax_percentage,
+        discount_type,
       },
       {
         where: {
@@ -345,26 +361,36 @@ const updateProduct = async (req, res) => {
       },
     });
     productConversion.forEach(async (item, key) => {
-      let type = "";
+      let type_temp = {};
       switch (key) {
         case 0:
-          type = "C";
+          type_temp = {
+            type: "C",
+            sorting: 0,
+          };
           break;
         case 1:
-          type = "B";
+          type_temp = {
+            type: "B",
+            sorting: 1,
+          };
           break;
         case 2:
-          type = "P";
+          type_temp = {
+            type: "C",
+            sorting: 2,
+          };
           break;
 
         default:
           break;
       }
       await Product_Conversion.create({
-        type: type,
+        type: type_temp.type,
+        sorting: type_temp.sorting,
         selling_unit: item.selling_unit,
         item_conversion: item.item_conversion,
-        productId: product_data.id,
+        productId: id,
       });
     });
     //
@@ -598,7 +624,7 @@ const getProductConversion = async (req, res) => {
   idString = idString.substring(0, idString.length - 1);
   try {
     const [response, metaData] = await sequelize.query(
-      `SELECT * FROM product_conversions WHERE (productId) IN (${idString})`
+      `SELECT * FROM product_conversions WHERE (productId) IN (${idString}) `
     );
     return res.status(200).json(response);
   } catch (err) {
@@ -637,9 +663,8 @@ const findForUpdate = async (req, res) => {
     SELECT product_generic_formula FROM product_genericformulas where productId = "${_id}"`);
     //
     const [product_conversion, metaData5] = await sequelize.query(`
-    SELECT selling_unit,item_conversion FROM product_conversions where productId = "${_id} order by id asc"`);
+    SELECT selling_unit,item_conversion FROM product_conversions where productId = "${_id} order by sorting asc"`);
     //
-
     return res.status(200).json({
       product_tags: product_tag_response,
       product_vendors: product_vendor_response,

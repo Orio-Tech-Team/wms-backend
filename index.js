@@ -60,5 +60,5 @@ app.listen(port, () => {
   sequelize.authenticate();
   console.log("Database Connected");
   //
-  console.log("Server started at port "+port);
+  console.log("Server started at port " + port);
 });
