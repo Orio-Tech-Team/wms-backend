@@ -100,6 +100,9 @@ const Product = sequelize.define(
     sales_tax_percentage: {
       type: DataTypes.STRING,
     },
+    dosage_instructions: {
+      type: DataTypes.STRING,
+    },
   },
   {
     initialAutoIncrement: 1000,

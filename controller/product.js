@@ -142,7 +142,9 @@ const createProduct = async (req, res) => {
           tag_name: each_tag,
         });
       });
-      const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+      const productTagsResponse = await Product_Tag.bulkCreate(
+        product_tags_temp
+      );
     }
     //
     if (productGenericFormula.length > 0) {
@@ -354,9 +356,7 @@ const updateProduct = async (req, res) => {
         case 2:
           type = "P";
           break;
-        case 3:
-          type = "T";
-          break;
+
         default:
           break;
       }
@@ -440,20 +440,6 @@ const updateProduct = async (req, res) => {
         productPicturesRaw
       );
       //
-      const productTagsRaw = productTags
-        .map((eachItem) => {
-          if (productTags.length > 0) {
-            return {
-              productId: id,
-              tag_name: eachItem,
-            };
-          }
-          return "";
-        })
-        .filter((eachValue) => {
-          return eachValue != "";
-        });
-      const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
     }
     //
     //
@@ -465,7 +451,9 @@ const updateProduct = async (req, res) => {
           tag_name: each_tag,
         });
       });
-      const productTagsResponse = await Product_Tag.bulkCreate(productTagsRaw);
+      const productTagsResponse = await Product_Tag.bulkCreate(
+        product_tags_temp
+      );
     }
     //
     if (productGenericFormula.length > 0) {
@@ -633,6 +621,38 @@ const getAllProductConversion = async (req, res) => {
   }
 };
 //
+const findForUpdate = async (req, res) => {
+  const { _id } = req.body;
+  try {
+    const [product_tag_response, metaData1] = await sequelize.query(
+      `SELECT tag_name from product_tags where productId = "${_id}"`
+    );
+    const [product_vendor_response, metaData2] = await sequelize.query(`
+    SELECT vendorId FROM product_vendors where productId = "${_id}"`);
+    //
+    const [product_category_response, metaData3] = await sequelize.query(`
+    SELECT categoryId from product_categories where productId = "${_id}"`);
+    //
+    const [product_genericformula_response, metaData4] = await sequelize.query(`
+    SELECT product_generic_formula FROM product_genericformulas where productId = "${_id}"`);
+    //
+    const [product_conversion, metaData5] = await sequelize.query(`
+    SELECT selling_unit,item_conversion FROM product_conversions where productId = "${_id} order by id asc"`);
+    //
+
+    return res.status(200).json({
+      product_tags: product_tag_response,
+      product_vendors: product_vendor_response,
+      product_categories: product_category_response,
+      product_generic: product_genericformula_response,
+      product_conversion: product_conversion,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+//
 module.exports = {
   createProduct,
   getProduct,
@@ -648,4 +668,5 @@ module.exports = {
   getProductFormula,
   getProductConversion,
   getAllProductConversion,
+  findForUpdate,
 };
