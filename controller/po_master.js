@@ -188,7 +188,7 @@ const cancelFunction = async (req, res) => {
         comment: comment,
       },
       {
-        where: { _id },
+        where: { id: _id },
       }
     );
     return res.status(200).json({
