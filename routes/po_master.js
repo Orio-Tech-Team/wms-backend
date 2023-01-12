@@ -4,8 +4,8 @@ const {
   orderApproved,
   orderReceived,
   quality_check,
-  productDetailUpdate,
   updateDetails,
+  cancelFunction,
 } = require("../controller/po_master");
 //
 const express = require("express"),
@@ -17,6 +17,6 @@ router.put("/product_order/update_details/", updateDetails);
 router.post("/product_order/quality_check/", quality_check);
 router.put("/purchase_order/order_received/:id", orderReceived);
 router.put("/purchase_order/order_approved/:id", orderApproved);
-router.put("/purchase_order/product_details/check/:id", productDetailUpdate);
+router.post("/purchase_order/cancel/", cancelFunction);
 //
 module.exports = router;

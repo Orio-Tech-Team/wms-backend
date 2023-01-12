@@ -179,8 +179,26 @@ const quality_check = async (req, res) => {
   }
 };
 //
-const productDetailUpdate = async (req, res) => {
-  console.log("hello");
+const cancelFunction = async (req, res) => {
+  const { _id, comment } = req.body;
+  try {
+    await PO_Master.update(
+      {
+        order_status: "Cancel",
+        comment: comment,
+      },
+      {
+        where: { _id },
+      }
+    );
+    return res.status(200).json({
+      message: "Success",
+      body: [],
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
 };
 //
 module.exports = {
@@ -189,6 +207,6 @@ module.exports = {
   updateDetails,
   orderReceived,
   orderApproved,
-  productDetailUpdate,
   quality_check,
+  cancelFunction,
 };

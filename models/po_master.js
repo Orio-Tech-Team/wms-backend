@@ -49,7 +49,7 @@ const PO_Master = sequelize.define(
       defaultValue: null,
     },
     order_status: {
-      type: DataTypes.ENUM("App", "Pen", "Rec", "PRec"),
+      type: DataTypes.ENUM("App", "Pen", "Rec", "PRec", "Cancel"),
       defaultValue: "Pen",
     },
     order_type: {
@@ -70,6 +70,9 @@ const PO_Master = sequelize.define(
     grand_total: {
       type: DataTypes.FLOAT,
       defaultValue: 0.0,
+    },
+    comment: {
+      type: DataTypes.STRING,
     },
   },
   {
